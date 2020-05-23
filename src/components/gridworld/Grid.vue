@@ -1,18 +1,25 @@
 <template>
-  <div class="grid">
+  <div
+    class="grid"
+    v-if="grid"
+    :style="{
+      width: `${grid.width * gridSize}px`,
+      height: `${grid.height * gridSize}px`
+    }"
+  >
     <svg>
-      <template v-for="i in Array(gridX).keys()">
-        <template v-for="j in Array(gridY).keys()">
+      <template v-for="i in Array(grid.height).keys()">
+        <template v-for="j in Array(grid.width).keys()">
           <Cell
             :key="`${i},${j}`"
             :x="j * gridSize"
             :y="i * gridSize"
             :size="gridSize"
-            :reward="-0.01"
+            :reward="grid.getReward(toState(i, j))"
             :value="Math.random() - Math.random()"
-            :terminal="Math.random() > 0.95 ? true : false"
-            :disabled="Math.random() > 0.8 ? true : false"
-            mode="policy"
+            :terminal="grid.isTerminal(toState(i, j))"
+            :disabled="grid.isDisallowed(toState(i, j))"
+            mode="reward"
             policy="up"
           />
         </template>
@@ -22,8 +29,8 @@
 </template>
 
 <script>
-import { Component, Vue } from "vue-property-decorator";
-import valueIteration from "@/rl/value_iteration";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import GridWorld from "@/rl/grid_world";
 
 import Cell from "./Cell.vue";
 
@@ -34,12 +41,37 @@ import Cell from "./Cell.vue";
   }
 })
 class Grid extends Vue {
+  @Prop() config;
   gridX = 8;
   gridY = 8;
   gridSize = 65;
+  _grid = null;
 
-  mounted() {
-    valueIteration();
+  get grid() {
+    if (!this._grid) {
+      this._grid = new GridWorld(
+        this.config.width,
+        this.config.height,
+        this.config.start,
+        this.config.terminals,
+        this.config.disallowedStates,
+        this.config.livingReward,
+        this.config.stochasticity
+      );
+    }
+    return this._grid;
+  }
+
+  created() {
+    console.clear();
+    console.log(this.grid);
+    console.log(this.grid.width, this.grid.height);
+  }
+
+  toState(i, j) {
+    if (this.grid) {
+      return [j + 1, this.grid.height - i];
+    }
   }
 }
 
@@ -48,8 +80,6 @@ export default Grid;
 
 <style scoped lang="scss">
 .grid {
-  width: 520px;
-  height: 520px;
   border: 1px solid black;
   margin: 0 auto;
 }
