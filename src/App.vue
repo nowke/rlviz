@@ -1,23 +1,26 @@
 <template>
-  <div id="app">
+  <v-app>
     <Header />
     <div class="grid-container">
       <Grid :config="config" :gridSize="gridSize" />
     </div>
-  </div>
+    <Settings />
+  </v-app>
 </template>
 
 <script>
 import { Component, Vue } from "vue-property-decorator";
 
 import Header from "@/components/Header.vue";
+import Settings from "@/components/Settings.vue";
 import Grid from "@/components/gridworld/Grid.vue";
 
 @Component({
   name: "App",
   components: {
     Grid,
-    Header
+    Header,
+    Settings
   }
 })
 class App extends Vue {
@@ -52,7 +55,15 @@ body {
   background: #fff;
 }
 
+html {
+  overflow-y: auto !important;
+}
+
 .grid-container {
   margin-top: 60px;
+}
+
+.bottom-nav {
+  position: fixed;
 }
 </style>

@@ -1,29 +1,22 @@
 <template>
   <header>
     <div class="config-selector">
-      <span class="title">Select algorithm</span>
-      <!-- <VueSelect
+      <v-select
+        class="select"
         v-model="algorithm"
-        button-class="flat"
-        :label="algorithm.label"
-        class="dropdown"
-      >
-        <VueSelectButton
-          :value="algorithms.VALUE_ITERATION"
-          :label="algorithms.VALUE_ITERATION.label"
-        />
-      </VueSelect> -->
-    </div>
-    <div class="config-selector">
-      <span class="title">Select grid</span>
-      <!-- <VueSelect
+        :items="algorithms"
+        outlined
+        dense
+        label="Select algorithm"
+      />
+      <v-select
+        class="select"
         v-model="grid"
-        button-class="flat"
-        :label="grid.label"
-        class="dropdown"
-      >
-        <VueSelectButton :value="grids.GRID_1" :label="grids.GRID_1.label" />
-      </VueSelect> -->
+        :items="grids"
+        outlined
+        dense
+        label="Select grid"
+      />
     </div>
   </header>
 </template>
@@ -33,21 +26,21 @@ import { Component, Vue } from "vue-property-decorator";
 
 const VALUE_ITERATION = {
   value: "VALUE_ITERATION",
-  label: "Value Iteration"
+  text: "Value Iteration"
 };
 const GRID_1 = {
   value: "GRID_1",
-  label: "Custom Grid 1 (4x3)"
+  text: "Custom Grid 1 (4x3)"
 };
 
 @Component({
   name: "Header"
 })
 class Header extends Vue {
-  algorithms = { VALUE_ITERATION };
+  algorithms = [VALUE_ITERATION];
   algorithm = VALUE_ITERATION;
 
-  grids = { GRID_1 };
+  grids = [GRID_1];
   grid = GRID_1;
 }
 
@@ -61,7 +54,7 @@ header {
   flex-direction: row;
   align-items: center;
   position: relative;
-  height: 40px;
+  height: 80px;
   z-index: 1;
   background: #fff;
   border-bottom-color: rgba(0, 0, 0, 0.12);
@@ -72,19 +65,12 @@ header {
 .config-selector {
   display: flex;
   align-items: baseline;
-  flex-direction: column;
-  margin-right: 4em;
+  flex-direction: row;
+  margin-top: 1.25em;
 
-  .dropdown {
-    border-width: thin;
-    border-style: solid;
-    border-color: rgba(0, 0, 0, 0.12);
-  }
-
-  .title {
-    font-size: 0.9em;
-    font-weight: 500;
-    margin: 2px 0;
+  .select {
+    margin-right: 2em;
+    text-align: left;
   }
 }
 </style>
