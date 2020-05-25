@@ -48,6 +48,16 @@
         :y="y"
         :size="size"
       />
+      <text
+        v-if="policy"
+        :x="policyConfig.x"
+        :y="policyConfig.y"
+        :dominant-baseline="policyConfig.baseline"
+        :text-anchor="policyConfig.anchor"
+        class="policy-small"
+      >
+        {{ policyConfig.text }}
+      </text>
     </template>
   </g>
 </template>
@@ -75,6 +85,7 @@ class Cell extends Vue {
   @Prop() disabled;
   @Prop() mode;
   @Prop() policy;
+  _policyConfig;
 
   get cellColor() {
     if (!this.value) return "#000";
@@ -88,6 +99,46 @@ class Cell extends Vue {
         .scale(["black", "#ee5253"])(-this.value)
         .hex();
     }
+  }
+
+  get policyConfig() {
+    if (!this.policy) return null;
+
+    const padding = 3;
+    if (!this._policyConfig) {
+      const configs = {
+        U: {
+          text: "▲",
+          x: this.x + this.size / 2.0,
+          y: this.y + padding,
+          anchor: "middle",
+          baseline: "hanging"
+        },
+        D: {
+          text: "▼",
+          x: this.x + this.size / 2.0,
+          y: this.y + this.size - padding,
+          anchor: "middle",
+          baseline: "ideographic"
+        },
+        L: {
+          text: "◀",
+          x: this.x + padding,
+          y: this.y + this.size / 2.0,
+          anchor: "start",
+          baseline: "middle"
+        },
+        R: {
+          text: "▶",
+          x: this.x + this.size - padding,
+          y: this.y + this.size / 2.0,
+          anchor: "end",
+          baseline: "middle"
+        }
+      };
+      this._policyConfig = configs[this.policy];
+    }
+    return this._policyConfig;
   }
 }
 
@@ -121,5 +172,10 @@ export default Cell;
   fill: #fff;
   font-size: 1em;
   font-weight: bold;
+}
+
+.policy-small {
+  font-size: 0.8em;
+  fill: #fff;
 }
 </style>
