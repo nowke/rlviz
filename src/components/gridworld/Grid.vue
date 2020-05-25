@@ -1,7 +1,7 @@
 <template>
   <div
     class="grid"
-    v-if="grid"
+    v-if="grid && vi"
     :style="{
       width: `${grid.width * gridSize}px`,
       height: `${grid.height * gridSize}px`
@@ -16,10 +16,10 @@
             :y="i * gridSize"
             :size="gridSize"
             :reward="grid.getReward(toState(i, j))"
-            :value="Math.random() - Math.random()"
+            :value="stateValue(toState(i, j))"
             :terminal="grid.isTerminal(toState(i, j))"
             :disabled="grid.isDisallowed(toState(i, j))"
-            mode="reward"
+            mode="value"
             policy="up"
           />
         </template>
@@ -30,8 +30,9 @@
 
 <script>
 import { Component, Prop, Vue } from "vue-property-decorator";
-import GridWorld from "@/rl/grid_world";
 
+import GridWorld from "@/rl/grid_world";
+import ValueIteration from "@/rl/value_iteration";
 import Cell from "./Cell.vue";
 
 @Component({
@@ -42,10 +43,9 @@ import Cell from "./Cell.vue";
 })
 class Grid extends Vue {
   @Prop() config;
-  gridX = 8;
-  gridY = 8;
-  gridSize = 65;
+  @Prop() gridSize;
   _grid = null;
+  _vi = null;
 
   get grid() {
     if (!this._grid) {
@@ -62,16 +62,29 @@ class Grid extends Vue {
     return this._grid;
   }
 
+  get vi() {
+    if (!this._vi) {
+      this._vi = new ValueIteration(this.grid, 0.9);
+    }
+    return this._vi;
+  }
+
   created() {
-    console.clear();
-    console.log(this.grid);
-    console.log(this.grid.width, this.grid.height);
+    this.vi.run(100);
+    // console.log(this.vi.value([1, 1]))
   }
 
   toState(i, j) {
     if (this.grid) {
       return [j + 1, this.grid.height - i];
     }
+  }
+
+  stateValue(state) {
+    if (!this.grid.isDisallowed(state)) {
+      return this.vi.value(state);
+    }
+    return 0.0;
   }
 }
 

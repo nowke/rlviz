@@ -17,6 +17,7 @@ class GridWorld {
     this.livingReward = livingReward;
     this.prob = stochasticity;
     this.states = this._states();
+    this.statesMap = this._toSet(this.states);
   }
 
   takeStochasticAction(action) {
@@ -32,7 +33,7 @@ class GridWorld {
   nextState(state, action) {
     const stateRepr = this._stateRepr(state);
     if (this.terminals.has(stateRepr)) {
-      return { state, reward: this.terminalRewards[stateRepr] };
+      return [state, this.terminalRewards[stateRepr]];
     }
 
     let [x, y] = state;
@@ -50,6 +51,11 @@ class GridWorld {
 
   getTransitions(state, action) {
     const transitions = [];
+    if (this.isTerminal(state)) {
+      transitions.push([1.0, null, this.getReward(state)]);
+      return transitions;
+    }
+
     transitions.push([this.prob, ...this.nextState(state, action)]);
     if (this.prob === 1.0) return transitions;
     const probRem = (1 - this.prob) / 2;
@@ -61,12 +67,10 @@ class GridWorld {
       transitions.push([probRem, ...this.nextState(state, "U")]);
       transitions.push([probRem, ...this.nextState(state, "D")]);
     }
-
     return transitions;
   }
 
   isTerminal(state) {
-    console.log("Terminal check", state);
     return this.terminals.has(this._stateRepr(state));
   }
 
@@ -80,6 +84,10 @@ class GridWorld {
       return this.terminalRewards[this._stateRepr(state)];
     }
     return this.livingReward;
+  }
+
+  get actions() {
+    return ["U", "D", "L", "R"];
   }
 
   _toSet(states) {
