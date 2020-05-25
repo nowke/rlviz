@@ -22,22 +22,28 @@
         />
       </template>
       <text
+        v-if="mode === 'reward'"
         :x="x + size / 2.0"
         :y="y + size / 2.0"
         dominant-baseline="middle"
         text-anchor="middle"
         class="reward"
-        v-if="mode === 'reward'"
+        :style="{
+          fontSize: `${size / 80.0}em`
+        }"
       >
         r = {{ reward }}
       </text>
       <text
+        v-if="mode === 'value'"
         :x="x + size / 2.0"
         :y="y + size / 2.0"
         dominant-baseline="middle"
         text-anchor="middle"
         class="value"
-        v-if="mode === 'value'"
+        :style="{
+          fontSize: `${size / 80.0}em`
+        }"
       >
         {{ value.toFixed(2) }}
       </text>
@@ -106,40 +112,38 @@ class Cell extends Vue {
   get policyConfig() {
     if (!this.policy) return null;
 
-    const padding = 3;
-    if (!this._policyConfig) {
-      const configs = {
-        U: {
-          text: "▲",
-          x: this.x + this.size / 2.0,
-          y: this.y + padding,
-          anchor: "middle",
-          baseline: "hanging"
-        },
-        D: {
-          text: "▼",
-          x: this.x + this.size / 2.0,
-          y: this.y + this.size - padding,
-          anchor: "middle",
-          baseline: "ideographic"
-        },
-        L: {
-          text: "◀",
-          x: this.x + padding,
-          y: this.y + this.size / 2.0,
-          anchor: "start",
-          baseline: "middle"
-        },
-        R: {
-          text: "▶",
-          x: this.x + this.size - padding,
-          y: this.y + this.size / 2.0,
-          anchor: "end",
-          baseline: "middle"
-        }
-      };
-      this._policyConfig = configs[this.policy];
-    }
+    const padding = this.size / 20.0;
+    const configs = {
+      U: {
+        text: "▲",
+        x: this.x + this.size / 2.0,
+        y: this.y + padding,
+        anchor: "middle",
+        baseline: "hanging"
+      },
+      D: {
+        text: "▼",
+        x: this.x + this.size / 2.0,
+        y: this.y + this.size - padding,
+        anchor: "middle",
+        baseline: "ideographic"
+      },
+      L: {
+        text: "◀",
+        x: this.x + padding,
+        y: this.y + this.size / 2.0,
+        anchor: "start",
+        baseline: "middle"
+      },
+      R: {
+        text: "▶",
+        x: this.x + this.size - padding,
+        y: this.y + this.size / 2.0,
+        anchor: "end",
+        baseline: "middle"
+      }
+    };
+    this._policyConfig = configs[this.policy];
     return this._policyConfig;
   }
 }
@@ -167,12 +171,10 @@ export default Cell;
 
 .reward {
   fill: #fff;
-  font-size: 0.8em;
 }
 
 .value {
   fill: #fff;
-  font-size: 1em;
   font-weight: bold;
 }
 

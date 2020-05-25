@@ -2,7 +2,7 @@
   <v-app>
     <Header />
     <div class="grid-container">
-      <Grid :config="config" :gridSize="gridSize" />
+      <Grid :config="config" />
     </div>
     <Settings />
   </v-app>
@@ -36,7 +36,6 @@ class App extends Vue {
     livingReward: 0.0,
     stochasticity: 0.8
   };
-  gridSize = 80;
 }
 
 export default App;

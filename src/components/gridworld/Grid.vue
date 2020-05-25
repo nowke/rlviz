@@ -3,8 +3,8 @@
     class="grid"
     v-if="grid && vi"
     :style="{
-      width: `${grid.width * gridSize}px`,
-      height: `${grid.height * gridSize}px`
+      width: `${grid.width * cellSize}px`,
+      height: `${grid.height * cellSize}px`
     }"
   >
     <svg>
@@ -12,15 +12,15 @@
         <template v-for="j in Array(grid.width).keys()">
           <Cell
             :key="`${i},${j}`"
-            :x="j * gridSize"
-            :y="i * gridSize"
-            :size="gridSize"
+            :x="j * cellSize"
+            :y="i * cellSize"
+            :size="cellSize"
             :reward="grid.getReward(toState(i, j))"
             :value="stateValue(toState(i, j))"
             :terminal="grid.isTerminal(toState(i, j))"
             :disabled="grid.isDisallowed(toState(i, j))"
             :policy="statePolicy(toState(i, j))"
-            mode="value"
+            :mode="$store.getters.mode"
           />
         </template>
       </template>
@@ -43,9 +43,12 @@ import Cell from "./Cell.vue";
 })
 class Grid extends Vue {
   @Prop() config;
-  @Prop() gridSize;
   _grid = null;
   _vi = null;
+
+  get cellSize() {
+    return this.$store.getters.cellSize;
+  }
 
   get grid() {
     if (!this._grid) {
@@ -75,7 +78,7 @@ class Grid extends Vue {
 
   async iter() {
     const timer = ms => new Promise(res => setTimeout(res, ms));
-    for (let i = 1; i < 10; i++) {
+    for (let i = 1; i <= 5; i++) {
       this.vi.run(1);
       this.$forceUpdate();
       await timer(100);

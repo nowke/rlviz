@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="settings-container">
     <div class="empty-overlay" @mouseup="onMouseUp" @mousemove="onMouseMove" />
     <div
       class="settings"
@@ -9,7 +9,37 @@
     >
       <div class="handler" @mousedown="onMouseDown" />
       <div class="content">
-        Hello footer
+        <v-row>
+          <v-col :cols="4">
+            <div class="config">
+              <p>Display mode</p>
+              <v-btn-toggle
+                v-model="mode"
+                mandatory
+                borderless
+                color="primary"
+                class="mb-4"
+              >
+                <v-btn value="value">Value</v-btn>
+                <v-btn value="reward">Reward</v-btn>
+                <v-btn value="policy">Policy</v-btn>
+              </v-btn-toggle>
+
+              <p>Cell size</p>
+              <v-btn-toggle
+                v-model="cellSize"
+                mandatory
+                borderless
+                color="primary"
+                class="mb-4"
+              >
+                <v-btn :value="80">S</v-btn>
+                <v-btn :value="100">M</v-btn>
+                <v-btn :value="120">L</v-btn>
+              </v-btn-toggle>
+            </div>
+          </v-col>
+        </v-row>
       </div>
     </div>
   </div>
@@ -22,8 +52,24 @@ import { Component, Vue } from "vue-property-decorator";
   name: "Footer"
 })
 class Footer extends Vue {
-  height = 60;
+  height = 260;
   resizing = false;
+
+  get mode() {
+    return this.$store.getters.mode;
+  }
+
+  set mode(value) {
+    this.$store.commit("setMode", value);
+  }
+
+  get cellSize() {
+    return this.$store.getters.cellSize;
+  }
+
+  set cellSize(value) {
+    this.$store.commit("setCellSize", value);
+  }
 
   onMouseDown() {
     this.resizing = true;
@@ -49,16 +95,16 @@ export default Footer;
   left: 0;
   position: fixed;
   width: 100%;
-  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
-    0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
-  resize: vertical;
   min-height: 60px;
   max-height: 50%;
   z-index: 2;
   background: #fff;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  overflow-y: scroll;
 
   .content {
-    padding: 0.8em;
+    padding: 0.6em 1.5em;
+    text-align: left;
   }
 
   .handler {
@@ -66,7 +112,6 @@ export default Footer;
     background-color: inherit;
     cursor: row-resize;
     user-select: none;
-    border-top: rgba(0, 0, 0, 0.12);
   }
 }
 

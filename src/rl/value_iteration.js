@@ -38,6 +38,8 @@ class ValueIteration {
 
   run(iterations) {
     for (let i = 1; i <= iterations; i++) {
+      // Calculate new state values
+      const stateValues = [];
       for (const state of this.grid.states) {
         const values = [];
         for (const action of this.grid.actions) {
@@ -45,7 +47,12 @@ class ValueIteration {
           if (!transitions.length) continue;
           values.push(this._getStateValue(transitions));
         }
-        this.setValue(state, Math.max(...values));
+        stateValues.push([state, Math.max(...values)]);
+      }
+
+      // Update new state values
+      for (const [state, value] of stateValues) {
+        this.setValue(state, value);
       }
     }
   }
