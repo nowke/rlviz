@@ -70,7 +70,16 @@ class Grid extends Vue {
   }
 
   created() {
-    this.vi.run(4);
+    this.iter();
+  }
+
+  async iter() {
+    const timer = ms => new Promise(res => setTimeout(res, ms));
+    for (let i = 1; i < 10; i++) {
+      this.vi.run(1);
+      this.$forceUpdate();
+      await timer(100);
+    }
   }
 
   toState(i, j) {

@@ -92,11 +92,13 @@ class Cell extends Vue {
 
     if (this.value >= 0) {
       return chroma
-        .scale(["black", "#10ac84"])(this.value)
+        .scale(["black", "#10ac84"])
+        .domain([0, 1.0])(this.value)
         .hex();
     } else {
       return chroma
-        .scale(["black", "#ee5253"])(-this.value)
+        .scale(["black", "#ee5253"])
+        .domain([0, 1.0])(-this.value)
         .hex();
     }
   }
