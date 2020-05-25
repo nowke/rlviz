@@ -49,7 +49,7 @@
         :size="size"
       />
       <text
-        v-if="policy"
+        v-if="mode === 'value' && policy"
         :x="policyConfig.x"
         :y="policyConfig.y"
         :dominant-baseline="policyConfig.baseline"

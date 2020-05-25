@@ -1,18 +1,23 @@
 <template>
   <div id="app">
-    <Grid :config="config" :gridSize="gridSize" />
+    <Header />
+    <div class="grid-container">
+      <Grid :config="config" :gridSize="gridSize" />
+    </div>
   </div>
 </template>
 
 <script>
 import { Component, Vue } from "vue-property-decorator";
 
+import Header from "@/components/Header.vue";
 import Grid from "@/components/gridworld/Grid.vue";
 
 @Component({
   name: "App",
   components: {
-    Grid
+    Grid,
+    Header
   }
 })
 class App extends Vue {
@@ -41,9 +46,13 @@ export default App;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
+
 body {
-  background: #f0e7d8;
+  background: #fff;
+}
+
+.grid-container {
+  margin-top: 60px;
 }
 </style>
