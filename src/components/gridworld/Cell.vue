@@ -42,7 +42,7 @@
         {{ value.toFixed(2) }}
       </text>
       <Arrow
-        v-if="mode === 'policy' && !terminal"
+        v-if="mode === 'policy' && !terminal && policy"
         :direction="policy"
         :x="x"
         :y="y"

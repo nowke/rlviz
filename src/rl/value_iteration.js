@@ -18,6 +18,24 @@ class ValueIteration {
     this.states[this._s(state)].value = value;
   }
 
+  policy(state) {
+    if (this.grid.isTerminal(state)) {
+      return null;
+    }
+
+    let maxValue = Number.NEGATIVE_INFINITY;
+    let maxAction = null;
+    for (const action of this.grid.actions) {
+      const transitions = this.grid.getTransitions(state, action);
+      const value = this._getStateValue(transitions);
+      if (value > maxValue) {
+        maxAction = action;
+        maxValue = value;
+      }
+    }
+    return maxAction;
+  }
+
   run(iterations) {
     for (let i = 1; i <= iterations; i++) {
       for (const state of this.grid.states) {
@@ -25,18 +43,20 @@ class ValueIteration {
         for (const action of this.grid.actions) {
           const transitions = this.grid.getTransitions(state, action);
           if (!transitions.length) continue;
-
-          const value = transitions
-            .map(
-              ([prob, nextState, reward]) =>
-                prob * (reward + this.gamma * this.value(nextState))
-            )
-            .reduce((x, y) => x + y, 0.0);
-          values.push(value);
+          values.push(this._getStateValue(transitions));
         }
         this.setValue(state, Math.max(...values));
       }
     }
+  }
+
+  _getStateValue(transitions) {
+    return transitions
+      .map(
+        ([prob, nextState, reward]) =>
+          prob * (reward + this.gamma * this.value(nextState))
+      )
+      .reduce((x, y) => x + y, 0.0);
   }
 
   _s(state) {

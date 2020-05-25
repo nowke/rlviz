@@ -19,8 +19,8 @@
             :value="stateValue(toState(i, j))"
             :terminal="grid.isTerminal(toState(i, j))"
             :disabled="grid.isDisallowed(toState(i, j))"
+            :policy="statePolicy(toState(i, j))"
             mode="value"
-            policy="up"
           />
         </template>
       </template>
@@ -70,8 +70,7 @@ class Grid extends Vue {
   }
 
   created() {
-    this.vi.run(100);
-    // console.log(this.vi.value([1, 1]))
+    this.vi.run(4);
   }
 
   toState(i, j) {
@@ -85,6 +84,12 @@ class Grid extends Vue {
       return this.vi.value(state);
     }
     return 0.0;
+  }
+
+  statePolicy(state) {
+    if (!this.grid.isDisallowed(state) && !this.grid.isTerminal(state)) {
+      return this.vi.policy(state);
+    }
   }
 }
 

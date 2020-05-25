@@ -36,7 +36,7 @@ class Arrow extends Vue {
 
   get config() {
     const properties = {
-      right: {
+      R: {
         width: `${0.62 * this.size}px`,
         height: `${0.31 * this.size}px`,
         viewBox: "-0.5 -0.5 91 51",
@@ -46,7 +46,7 @@ class Arrow extends Vue {
         d:
           "M 0 18.76 L 72.86 18.76 L 72.86 0 L 90 25 L 72.86 50 L 72.86 31.24 L 0 31.24 Z"
       },
-      left: {
+      L: {
         width: `${0.62 * this.size}px`,
         height: `${0.31 * this.size}px`,
         viewBox: "-0.5 -0.5 91 51",
@@ -56,7 +56,7 @@ class Arrow extends Vue {
         d:
           "M 0 18.76 L 72.86 18.76 L 72.86 0 L 90 25 L 72.86 50 L 72.86 31.24 L 0 31.24 Z"
       },
-      up: {
+      U: {
         width: `${0.31 * this.size}px`,
         height: `${0.62 * this.size}px`,
         viewBox: "-0.5 -0.5 51 91",
@@ -66,7 +66,7 @@ class Arrow extends Vue {
         d:
           "M -20 38.76 L 52.86 38.76 L 52.86 20 L 70 45 L 52.86 70 L 52.86 51.24 L -20 51.24 Z"
       },
-      down: {
+      D: {
         width: `${0.31 * this.size}px`,
         height: `${0.62 * this.size}px`,
         viewBox: "-0.5 -0.5 51 91",
