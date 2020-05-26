@@ -33,6 +33,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 import GridWorld from "@/rl/grid_world";
 import ValueIteration from "@/rl/value_iteration";
+import { delay, toFloat } from "@/utils";
 import Cell from "./Cell.vue";
 
 @Component({
@@ -67,22 +68,44 @@ class Grid extends Vue {
 
   get vi() {
     if (!this._vi) {
-      this._vi = new ValueIteration(this.grid, 0.9);
+      this._vi = new ValueIteration(
+        this.grid,
+        this.$store.getters.gamma,
+        this.$store.getters.initialValue
+      );
     }
     return this._vi;
   }
 
   created() {
-    this.iter();
+    this.$store.subscribeAction(action => {
+      if (action.type === "algorithm/runIterations") {
+        this.iter(action.payload);
+      } else if (action.type === "algorithm/reset") {
+        this.vi.resetInitial(toFloat(this.$store.getters.initialValue));
+        this.$forceUpdate();
+      }
+    });
+    this.$store.subscribe(mutation => {
+      if (
+        mutation.type === "initialValue" &&
+        this.$store.getters["algorithm/itersSoFar"] === 0 &&
+        !isNaN(parseFloat(mutation.payload))
+      ) {
+        this.vi.resetInitial(parseFloat(mutation.payload));
+        this.$forceUpdate();
+      }
+    });
   }
 
-  async iter() {
-    const timer = ms => new Promise(res => setTimeout(res, ms));
-    for (let i = 1; i <= 5; i++) {
+  async iter(iterations) {
+    for (let i = 1; i <= iterations; i++) {
       this.vi.run(1);
+      this.$store.dispatch("algorithm/incrementIteration");
       this.$forceUpdate();
-      await timer(100);
+      await delay(this.$store.getters.delay);
     }
+    this.$store.dispatch("algorithm/finishIteration");
   }
 
   toState(i, j) {

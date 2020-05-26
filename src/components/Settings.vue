@@ -1,6 +1,11 @@
 <template>
   <div class="settings-container">
-    <div class="empty-overlay" @mouseup="onMouseUp" @mousemove="onMouseMove" />
+    <div
+      class="empty-overlay"
+      @mouseup="onMouseUp"
+      @mousemove="onMouseMove"
+      :style="{ zIndex: overlayZIndex }"
+    />
     <div
       class="settings"
       @mouseup="onMouseUp"
@@ -39,6 +44,33 @@
               </v-btn-toggle>
             </div>
           </v-col>
+
+          <v-col :cols="4">
+            <p>Parameters</p>
+            <v-text-field
+              v-model="gamma"
+              type="number"
+              :min="0"
+              :max="1"
+              :step="0.01"
+              label="Discount Factor (γ)"
+              :style="{ width: '60%' }"
+              outlined
+              dense
+            />
+
+            <v-text-field
+              v-model="initialValue"
+              type="number"
+              :min="0"
+              :max="1"
+              :step="0.01"
+              label="Initial State Values"
+              :style="{ width: '60%' }"
+              outlined
+              dense
+            />
+          </v-col>
         </v-row>
       </div>
     </div>
@@ -54,13 +86,14 @@ import { Component, Vue } from "vue-property-decorator";
 class Footer extends Vue {
   height = 260;
   resizing = false;
+  overlayZIndex = -1;
 
   get mode() {
     return this.$store.getters.mode;
   }
 
   set mode(value) {
-    this.$store.commit("setMode", value);
+    this.$store.commit("mode", value);
   }
 
   get cellSize() {
@@ -68,11 +101,28 @@ class Footer extends Vue {
   }
 
   set cellSize(value) {
-    this.$store.commit("setCellSize", value);
+    this.$store.commit("cellSize", value);
+  }
+
+  get gamma() {
+    return this.$store.getters.gamma;
+  }
+
+  set gamma(value) {
+    this.$store.commit("gamma", value);
+  }
+
+  get initialValue() {
+    return this.$store.getters.initialValue;
+  }
+
+  set initialValue(value) {
+    this.$store.commit("initialValue", value);
   }
 
   onMouseDown() {
     this.resizing = true;
+    this.overlayZIndex = 0;
   }
 
   onMouseMove(e) {
@@ -83,6 +133,7 @@ class Footer extends Vue {
 
   onMouseUp() {
     this.resizing = false;
+    this.overlayZIndex = -1;
   }
 }
 

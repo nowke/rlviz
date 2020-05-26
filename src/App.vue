@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <Header />
+    <Controls />
     <div class="grid-container">
       <Grid :config="config" />
     </div>
@@ -11,6 +12,7 @@
 <script>
 import { Component, Vue } from "vue-property-decorator";
 
+import Controls from "@/components/Controls.vue";
 import Header from "@/components/Header.vue";
 import Settings from "@/components/Settings.vue";
 import Grid from "@/components/gridworld/Grid.vue";
@@ -18,6 +20,7 @@ import Grid from "@/components/gridworld/Grid.vue";
 @Component({
   name: "App",
   components: {
+    Controls,
     Grid,
     Header,
     Settings

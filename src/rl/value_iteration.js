@@ -2,9 +2,8 @@ class ValueIteration {
   constructor(grid, gamma, initial_value = 0.0) {
     this.grid = grid;
     this.gamma = gamma;
-    this.states = Object.fromEntries(
-      grid.states.map(state => [this._s(state), { value: initial_value }])
-    );
+    this.initial_value = initial_value;
+    this._initializeStateValues();
   }
 
   value(state) {
@@ -55,6 +54,24 @@ class ValueIteration {
         this.setValue(state, value);
       }
     }
+  }
+
+  reset() {
+    this._initializeStateValues();
+  }
+
+  resetInitial(initial_value) {
+    this.initial_value = initial_value;
+    this.reset();
+  }
+
+  _initializeStateValues() {
+    this.states = Object.fromEntries(
+      this.grid.states.map(state => [
+        this._s(state),
+        { value: this.initial_value }
+      ])
+    );
   }
 
   _getStateValue(transitions) {
