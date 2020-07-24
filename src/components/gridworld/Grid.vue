@@ -46,6 +46,7 @@ class Grid extends Vue {
   @Prop() config;
   _grid = null;
   _vi = null;
+  cancelRunSignalled = false;
 
   get cellSize() {
     return this.$store.getters.cellSize;
@@ -84,6 +85,8 @@ class Grid extends Vue {
       } else if (action.type === "algorithm/reset") {
         this.vi.resetInitial(toFloat(this.$store.getters.initialValue));
         this.$forceUpdate();
+      } else if (action.type === "algorithm/cancelRun") {
+        this.cancelRun();
       }
     });
     this.$store.subscribe(mutation => {
@@ -104,6 +107,11 @@ class Grid extends Vue {
       this.$store.dispatch("algorithm/incrementIteration");
       this.$forceUpdate();
       await delay(this.$store.getters.delay);
+
+      if (this.cancelRunSignalled) {
+        this.cancelRunSignalled = false;
+        break;
+      }
     }
     this.$store.dispatch("algorithm/finishIteration");
   }
@@ -125,6 +133,10 @@ class Grid extends Vue {
     if (!this.grid.isDisallowed(state) && !this.grid.isTerminal(state)) {
       return this.vi.policy(state);
     }
+  }
+
+  cancelRun() {
+    this.cancelRunSignalled = true;
   }
 }
 

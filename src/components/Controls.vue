@@ -30,7 +30,10 @@
         small
         class="play-btn ml-2"
         :disabled="$store.getters['algorithm/running']"
-        @click="$store.dispatch('algorithm/runIterations', iterations)"
+        @click="
+          iterations > 0 &&
+            $store.dispatch('algorithm/runIterations', iterations)
+        "
       >
         <v-icon left small>mdi-play</v-icon>
       </v-btn>
@@ -48,6 +51,16 @@
         />
       </div>
     </div>
+    <v-btn
+      :disabled="!$store.getters['algorithm/running']"
+      @click="$store.dispatch('algorithm/cancelRun')"
+      small
+      depressed
+      dense
+    >
+      <v-icon left small>mdi-stop</v-icon>
+      Stop
+    </v-btn>
     <v-btn small depressed dense @click="$store.dispatch('algorithm/reset')">
       <v-icon left small>mdi-restore</v-icon>
       Reset
@@ -90,6 +103,10 @@ export default Controls;
   align-items: baseline;
   flex-direction: row;
   padding: 0 1em;
+
+  .v-btn {
+    margin-left: 5px;
+  }
 }
 
 .controls {

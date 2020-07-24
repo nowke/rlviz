@@ -43,6 +43,9 @@ const algorithmStore = {
       commit("setAlgorithmRunning", false);
       commit("setAlgorithmCurrentTotal", 0);
       commit("setAlgorithmIterSoFar", 0);
+    },
+    cancelRun({ commit }) {
+      commit("setAlgorithmRunning", false);
     }
   }
 };
