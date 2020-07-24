@@ -4,6 +4,7 @@ class ValueIteration {
     this.gamma = gamma;
     this.initial_value = initial_value;
     this._initializeStateValues();
+    this.value_diff = 0;
   }
 
   value(state) {
@@ -15,6 +16,10 @@ class ValueIteration {
 
   setValue(state, value) {
     this.states[this._s(state)].value = value;
+  }
+
+  getValue(state) {
+    return this.states[this._s(state)].value;
   }
 
   policy(state) {
@@ -50,9 +55,13 @@ class ValueIteration {
       }
 
       // Update new state values
+      const diff = [];
       for (const [state, value] of stateValues) {
+        const previousValue = this.getValue(state);
+        diff.push(Math.abs(previousValue - value));
         this.setValue(state, value);
       }
+      this.value_diff = diff.reduce((a, b) => a + b, 0) / diff.length;
     }
   }
 

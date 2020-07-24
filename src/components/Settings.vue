@@ -71,6 +71,10 @@
               dense
             />
           </v-col>
+
+          <v-col :cols="4">
+            <IterationChart />
+          </v-col>
         </v-row>
       </div>
     </div>
@@ -80,8 +84,13 @@
 <script>
 import { Component, Vue } from "vue-property-decorator";
 
+import IterationChart from "./IterationChart.vue";
+
 @Component({
-  name: "Footer"
+  name: "Footer",
+  components: {
+    IterationChart
+  }
 })
 class Footer extends Vue {
   height = 260;

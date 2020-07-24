@@ -105,6 +105,7 @@ class Grid extends Vue {
     for (let i = 1; i <= iterations; i++) {
       this.vi.run(1);
       this.$store.dispatch("algorithm/incrementIteration");
+      this.$store.commit("algorithm/addToValueHistory", this.vi.value_diff);
       this.$forceUpdate();
       await delay(this.$store.getters.delay);
 

@@ -4,7 +4,8 @@ const algorithmStore = {
     running: false, // whether algorithm is being run
     currentIter: 0, // Iteration that is currently running
     currentRunTotalIters: 0, // Total iterations user asked
-    iterSoFar: 0 // Total iterations that's been executed ever
+    iterSoFar: 0, // Total iterations that's been executed ever
+    valueHistory: []
   }),
   mutations: {
     setAlgorithmRunning(state, value) {
@@ -18,11 +19,18 @@ const algorithmStore = {
     },
     setAlgorithmIterSoFar(state, value) {
       state.iterSoFar = value;
+    },
+    addToValueHistory(state, value) {
+      state.valueHistory.push(value);
+    },
+    clearValueHistory(state) {
+      state.valueHistory = [];
     }
   },
   getters: {
     running: state => state.running,
-    itersSoFar: state => state.iterSoFar
+    itersSoFar: state => state.iterSoFar,
+    valueHistory: state => state.valueHistory
   },
   actions: {
     runIterations: ({ commit }, payload) => {
@@ -43,6 +51,7 @@ const algorithmStore = {
       commit("setAlgorithmRunning", false);
       commit("setAlgorithmCurrentTotal", 0);
       commit("setAlgorithmIterSoFar", 0);
+      commit("clearValueHistory");
     },
     cancelRun({ commit }) {
       commit("setAlgorithmRunning", false);
