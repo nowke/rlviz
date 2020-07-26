@@ -1,70 +1,78 @@
 <template>
-  <div class="controls-container">
-    <div class="controls">
-      <span class="mr-3">Run #Iterations:</span>
-      <v-btn
-        v-for="iteration in iterationChoices"
-        :key="iteration"
-        depressed
-        dense
-        small
-        class="iterations"
-        :disabled="$store.getters['algorithm/running']"
-        @click="$store.dispatch('algorithm/runIterations', iteration)"
-      >
-        <v-icon left small>mdi-play</v-icon> {{ iteration }}
-      </v-btn>
-      <div class="ml-4">
-        <v-text-field
-          v-model="iterations"
-          outlined
-          hide-details
-          type="number"
-          :step="1"
-          class="control-input play"
-        />
-      </div>
-      <v-btn
-        depressed
-        dense
-        small
-        class="play-btn ml-2"
-        :disabled="$store.getters['algorithm/running']"
-        @click="
-          iterations > 0 &&
-            $store.dispatch('algorithm/runIterations', iterations)
-        "
-      >
-        <v-icon left small>mdi-play</v-icon>
-      </v-btn>
+  <div>
+    <v-progress-linear
+      :active="$store.getters['algorithm/running']"
+      absolute
+      :value="iterProgressPerc"
+      :height="2"
+    />
+    <div class="controls-container">
+      <div class="controls">
+        <span class="mr-3">Run #Iterations:</span>
+        <v-btn
+          v-for="iteration in iterationChoices"
+          :key="iteration"
+          depressed
+          dense
+          small
+          class="iterations"
+          :disabled="$store.getters['algorithm/running']"
+          @click="$store.dispatch('algorithm/runIterations', iteration)"
+        >
+          <v-icon left small>mdi-play</v-icon> {{ iteration }}
+        </v-btn>
+        <div class="ml-4">
+          <v-text-field
+            v-model="iterations"
+            outlined
+            hide-details
+            type="number"
+            :step="1"
+            class="control-input play"
+          />
+        </div>
+        <v-btn
+          depressed
+          dense
+          small
+          class="play-btn ml-2"
+          :disabled="$store.getters['algorithm/running']"
+          @click="
+            iterations > 0 &&
+              $store.dispatch('algorithm/runIterations', iterations)
+          "
+        >
+          <v-icon left small>mdi-play</v-icon>
+        </v-btn>
 
-      <span class="ml-5 mr-3">Iteration Delay: </span>
-      <div>
-        <v-text-field
-          v-model="delay"
-          outlined
-          hide-details
-          type="number"
-          :step="1"
-          suffix="ms"
-          class="control-input delay"
-        />
+        <span class="ml-5 mr-3">Iteration Delay: </span>
+        <div>
+          <v-text-field
+            v-model="delay"
+            outlined
+            hide-details
+            type="number"
+            :step="1"
+            suffix="ms"
+            class="control-input delay"
+          />
+        </div>
       </div>
+      <v-btn
+        :disabled="!$store.getters['algorithm/running']"
+        @click="$store.dispatch('algorithm/cancelRun')"
+        small
+        depressed
+        dense
+      >
+        <v-icon left small>mdi-stop</v-icon>
+        Stop
+      </v-btn>
+      <v-btn small depressed dense @click="$store.dispatch('algorithm/reset')">
+        <v-icon left small>mdi-restore</v-icon>
+        Reset
+      </v-btn>
     </div>
-    <v-btn
-      :disabled="!$store.getters['algorithm/running']"
-      @click="$store.dispatch('algorithm/cancelRun')"
-      small
-      depressed
-      dense
-    >
-      <v-icon left small>mdi-stop</v-icon>
-      Stop
-    </v-btn>
-    <v-btn small depressed dense @click="$store.dispatch('algorithm/reset')">
-      <v-icon left small>mdi-restore</v-icon>
-      Reset
-    </v-btn>
   </div>
 </template>
 
@@ -92,6 +100,15 @@ class Controls extends Vue {
   set delay(value) {
     this.$store.commit("delay", value);
   }
+
+  get iterProgressPerc() {
+    const current = this.$store.getters["algorithm/currentIter"];
+    const total = this.$store.getters["algorithm/currentRunTotalIters"];
+    if (total === 0) {
+      return 0;
+    }
+    return (current * 100) / total;
+  }
 }
 
 export default Controls;
@@ -102,7 +119,7 @@ export default Controls;
   display: flex;
   align-items: baseline;
   flex-direction: row;
-  padding: 0 1em;
+  padding: 0.2em 1em;
 
   .v-btn {
     margin-left: 5px;

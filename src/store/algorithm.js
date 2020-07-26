@@ -30,6 +30,8 @@ const algorithmStore = {
   getters: {
     running: state => state.running,
     itersSoFar: state => state.iterSoFar,
+    currentIter: state => state.currentIter,
+    currentRunTotalIters: state => state.currentRunTotalIters,
     valueHistory: state => state.valueHistory
   },
   actions: {
