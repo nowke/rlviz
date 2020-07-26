@@ -22,15 +22,11 @@
 </template>
 
 <script>
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 
 const VALUE_ITERATION = {
   value: "VALUE_ITERATION",
   text: "Value Iteration"
-};
-const GRID_1 = {
-  value: "GRID_1",
-  text: "Custom Grid 1 (4x3)"
 };
 
 @Component({
@@ -40,8 +36,16 @@ class Header extends Vue {
   algorithms = [VALUE_ITERATION];
   algorithm = VALUE_ITERATION;
 
-  grids = [GRID_1];
-  grid = GRID_1;
+  grids = this.$store.getters["grid/defaultGridChoices"].map((g, i) => ({
+    value: i,
+    text: g.name
+  }));
+  grid = this.$store.getters["grid/currentGridIndex"];
+
+  @Watch("grid")
+  onGridChange(val) {
+    this.$store.dispatch("changeGrid", val);
+  }
 }
 
 export default Header;

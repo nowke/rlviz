@@ -84,6 +84,7 @@
 <script>
 import { Component, Vue } from "vue-property-decorator";
 
+import { toFloat } from "@/utils";
 import IterationChart from "./IterationChart.vue";
 
 @Component({
@@ -118,7 +119,7 @@ class Footer extends Vue {
   }
 
   set gamma(value) {
-    this.$store.commit("gamma", value);
+    this.$store.commit("gamma", toFloat(value));
   }
 
   get initialValue() {
@@ -126,7 +127,7 @@ class Footer extends Vue {
   }
 
   set initialValue(value) {
-    this.$store.commit("initialValue", value);
+    this.$store.commit("initialValue", toFloat(value));
   }
 
   onMouseDown() {

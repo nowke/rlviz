@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 
 import algorithm from "./algorithm";
+import grid from "./grid";
 
 Vue.use(Vuex);
 
@@ -44,8 +45,14 @@ export default new Vuex.Store({
     iterations: state => state.control.iterations,
     delay: state => state.control.delay
   },
-  actions: {},
+  actions: {
+    changeGrid({ commit, dispatch }, index) {
+      commit("grid/setCurrentGridIndex", index);
+      dispatch("algorithm/reset");
+    }
+  },
   modules: {
-    algorithm
+    algorithm,
+    grid
   }
 });

@@ -31,9 +31,7 @@
 <script>
 import { Component, Prop, Vue } from "vue-property-decorator";
 
-import GridWorld from "@/rl/grid_world";
-import ValueIteration from "@/rl/value_iteration";
-import { delay, toFloat } from "@/utils";
+import { delay } from "@/utils";
 import Cell from "./Cell.vue";
 
 @Component({
@@ -43,48 +41,19 @@ import Cell from "./Cell.vue";
   }
 })
 class Grid extends Vue {
-  @Prop() config;
-  _grid = null;
-  _vi = null;
+  config = this.$store.getters["grid/currentGrid"];
+  @Prop() grid;
+  @Prop() vi;
   cancelRunSignalled = false;
 
   get cellSize() {
     return this.$store.getters.cellSize;
   }
 
-  get grid() {
-    if (!this._grid) {
-      this._grid = new GridWorld(
-        this.config.width,
-        this.config.height,
-        this.config.start,
-        this.config.terminals,
-        this.config.disallowedStates,
-        this.config.livingReward,
-        this.config.stochasticity
-      );
-    }
-    return this._grid;
-  }
-
-  get vi() {
-    if (!this._vi) {
-      this._vi = new ValueIteration(
-        this.grid,
-        this.$store.getters.gamma,
-        this.$store.getters.initialValue
-      );
-    }
-    return this._vi;
-  }
-
   created() {
     this.$store.subscribeAction(action => {
       if (action.type === "algorithm/runIterations") {
         this.iter(action.payload);
-      } else if (action.type === "algorithm/reset") {
-        this.vi.resetInitial(toFloat(this.$store.getters.initialValue));
-        this.$forceUpdate();
       } else if (action.type === "algorithm/cancelRun") {
         this.cancelRun();
       }
