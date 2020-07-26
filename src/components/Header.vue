@@ -2,20 +2,22 @@
   <header>
     <div class="config-selector">
       <v-select
-        class="select"
+        :disabled="$store.getters['algorithm/running']"
         v-model="algorithm"
         :items="algorithms"
         outlined
         dense
         label="Select algorithm"
+        class="select"
       />
       <v-select
-        class="select"
+        :disabled="$store.getters['algorithm/running']"
         v-model="grid"
         :items="grids"
         outlined
         dense
         label="Select grid"
+        class="select"
       />
     </div>
   </header>

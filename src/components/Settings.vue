@@ -48,6 +48,7 @@
           <v-col :cols="4">
             <p>Parameters</p>
             <v-text-field
+              :disabled="$store.getters['algorithm/running']"
               v-model="gamma"
               type="number"
               :min="0"
@@ -60,6 +61,7 @@
             />
 
             <v-text-field
+              :disabled="$store.getters['algorithm/running']"
               v-model="initialValue"
               type="number"
               :min="0"

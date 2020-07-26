@@ -24,6 +24,7 @@
         <div class="ml-4">
           <v-text-field
             v-model="iterations"
+            :disabled="$store.getters['algorithm/running']"
             outlined
             hide-details
             type="number"
@@ -48,6 +49,7 @@
         <span class="ml-5 mr-3">Iteration Delay: </span>
         <div>
           <v-text-field
+            :disabled="$store.getters['algorithm/running']"
             v-model="delay"
             outlined
             hide-details
@@ -68,7 +70,13 @@
         <v-icon left small>mdi-stop</v-icon>
         Stop
       </v-btn>
-      <v-btn small depressed dense @click="$store.dispatch('algorithm/reset')">
+      <v-btn
+        :disabled="$store.getters['algorithm/running']"
+        @click="$store.dispatch('algorithm/reset')"
+        small
+        depressed
+        dense
+      >
         <v-icon left small>mdi-restore</v-icon>
         Reset
       </v-btn>
