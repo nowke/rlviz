@@ -19,6 +19,20 @@
         label="Select grid"
         class="select"
       />
+      <v-dialog
+        v-model="showGridEditor"
+        fullscreen
+        hide-overlay
+        transition="dialog-bottom-transition"
+        v-on:keydown="() => {}"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn v-bind="attrs" v-on="on" small dense>
+            New Grid
+          </v-btn>
+        </template>
+        <GridEdior :close="(showGridEditor = false)" />
+      </v-dialog>
     </div>
   </header>
 </template>
@@ -26,13 +40,18 @@
 <script>
 import { Component, Vue, Watch } from "vue-property-decorator";
 
+import GridEdior from "@/components/grideditor/GridEditor.vue";
+
 const VALUE_ITERATION = {
   value: "VALUE_ITERATION",
   text: "Value Iteration"
 };
 
 @Component({
-  name: "Header"
+  name: "Header",
+  components: {
+    GridEdior
+  }
 })
 class Header extends Vue {
   algorithms = [VALUE_ITERATION];
@@ -43,6 +62,8 @@ class Header extends Vue {
     text: g.name
   }));
   grid = this.$store.getters["grid/currentGridIndex"];
+
+  showGridEditor = false;
 
   @Watch("grid")
   onGridChange(val) {
