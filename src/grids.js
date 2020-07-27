@@ -42,3 +42,24 @@ export const GRID_BRIDGE_CROSSING = {
 };
 
 export const GRIDS = [GRID_CLASSIC_4x3, GRID_BRIDGE_CROSSING];
+
+// GridEditor
+export const DEFAULT_GRID_CONFIG = {
+  name: "",
+  width: 4,
+  height: 3,
+  states: {
+    "0,0": { selected: false, terminal: false, disabled: false, reward: 0 },
+    "0,1": { selected: false, terminal: false, disabled: false, reward: 0 },
+    "0,2": { selected: false, terminal: false, disabled: false, reward: 0 },
+    "0,3": { selected: false, terminal: true, disabled: false, reward: 1 },
+    "1,0": { selected: false, terminal: false, disabled: false, reward: 0 },
+    "1,1": { selected: false, terminal: false, disabled: true, reward: 0 },
+    "1,2": { selected: false, terminal: false, disabled: false, reward: 0 },
+    "1,3": { selected: false, terminal: true, disabled: false, reward: -1 },
+    "2,0": { selected: false, terminal: false, disabled: false, reward: 0 },
+    "2,1": { selected: false, terminal: false, disabled: false, reward: 0 },
+    "2,2": { selected: false, terminal: false, disabled: false, reward: 0 },
+    "2,3": { selected: false, terminal: false, disabled: false, reward: 0 }
+  }
+};
