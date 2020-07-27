@@ -1,5 +1,6 @@
 module.exports = {
   transpileDependencies: ["vuetify"],
+  publicPath: process.env.NODE_ENV === "production" ? "/rlviz" : "/",
   pluginOptions: {
     webpackBundleAnalyzer: {
       openAnalyzer: false,

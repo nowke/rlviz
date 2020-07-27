@@ -2,7 +2,7 @@
   <v-app>
     <Header />
     <Controls />
-    <div class="grid-container">
+    <div class="grid-wrapper">
       <Grid :grid="grid" :vi="vi" />
     </div>
     <Settings />
@@ -97,7 +97,7 @@ html {
   overflow-y: auto !important;
 }
 
-.grid-container {
+.grid-wrapper {
   margin-top: 60px;
 }
 

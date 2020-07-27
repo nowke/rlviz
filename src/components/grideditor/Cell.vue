@@ -83,7 +83,7 @@ class Cell extends Vue {
 
   get selectedStyles() {
     return {
-      stroke: "red",
+      stroke: "#F44336",
       strokeWidth: "3"
     };
   }

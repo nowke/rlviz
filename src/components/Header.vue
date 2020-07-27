@@ -31,7 +31,7 @@
             New Grid
           </v-btn>
         </template>
-        <GridEdior :close="(showGridEditor = false)" />
+        <GridEdior :close="closeGridEditor" />
       </v-dialog>
     </div>
   </header>
@@ -68,6 +68,10 @@ class Header extends Vue {
   @Watch("grid")
   onGridChange(val) {
     this.$store.dispatch("changeGrid", val);
+  }
+
+  closeGridEditor() {
+    this.showGridEditor = false;
   }
 }
 
