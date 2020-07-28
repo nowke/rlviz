@@ -1,42 +1,38 @@
 <template>
   <v-app>
     <Header />
-    <Controls />
-    <div class="grid-wrapper">
-      <Grid :grid="grid" :vi="vi" />
-    </div>
-    <Settings />
+    <component :is="component" :grid="grid" :algo="algo" />
   </v-app>
 </template>
 
 <script>
 import { Component, Vue } from "vue-property-decorator";
 
-import Controls from "@/components/Controls.vue";
 import Header from "@/components/Header.vue";
-import Settings from "@/components/Settings.vue";
-import Grid from "@/components/gridworld/Grid.vue";
+import ValueIterRenderer from "@/components/algorithm/value_iteration/Renderer.vue";
+import PolicyIterRenderer from "@/components/algorithm/policy_iteration/Renderer.vue";
 import GridWorld from "@/rl/grid_world";
-import ValueIteration from "@/rl/value_iteration";
+import algorithmConfig from "@/rl/config";
 
 @Component({
   name: "App",
   components: {
-    Controls,
-    Grid,
     Header,
-    Settings
+    ValueIterRenderer,
+    PolicyIterRenderer
   }
 })
 class App extends Vue {
   config = this.$store.getters["grid/currentGrid"];
   grid = null;
-  vi = null;
+  algo = null;
+  component =
+    algorithmConfig[this.$store.getters["algorithm/name"].value].component;
 
   created() {
     const grid = this.getGridWorld(this.config);
     this.grid = grid;
-    this.vi = this.getValueIter(grid);
+    this.algo = this.getAlgorithmClass(grid);
 
     this.$store.subscribeAction(action => {
       if (action.type === "changeGrid") {
@@ -45,6 +41,11 @@ class App extends Vue {
         this.reset(config);
       } else if (action.type === "algorithm/reset") {
         this.reset(this.config);
+      }
+    });
+    this.$store.subscribe(mutation => {
+      if (mutation.type === "algorithm/name") {
+        this.component = algorithmConfig[mutation.payload.value].component;
       }
     });
   }
@@ -61,8 +62,10 @@ class App extends Vue {
     );
   }
 
-  getValueIter(grid) {
-    return new ValueIteration(
+  getAlgorithmClass(grid) {
+    const algorithmClass =
+      algorithmConfig[this.$store.getters["algorithm/name"].value].class;
+    return new algorithmClass(
       grid,
       this.$store.getters.gamma,
       this.$store.getters.initialValue
@@ -73,7 +76,7 @@ class App extends Vue {
     this.config = config;
     const newGrid = this.getGridWorld(config);
     this.grid = newGrid;
-    this.vi = this.getValueIter(newGrid);
+    this.algo = this.getAlgorithmClass(newGrid);
   }
 }
 

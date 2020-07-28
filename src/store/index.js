@@ -49,6 +49,10 @@ export default new Vuex.Store({
     changeGrid({ commit, dispatch }, index) {
       commit("grid/setCurrentGridIndex", index);
       dispatch("algorithm/reset");
+    },
+    changeAlgorithm({ commit, dispatch }, algorithm) {
+      commit("algorithm/name", algorithm);
+      dispatch("algorithm/reset");
     }
   },
   modules: {

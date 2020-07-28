@@ -9,6 +9,7 @@
         dense
         label="Select algorithm"
         class="select"
+        return-object
       />
       <v-select
         :disabled="$store.getters['algorithm/running']"
@@ -41,11 +42,7 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 
 import GridEdior from "@/components/grideditor/GridEditor.vue";
-
-const VALUE_ITERATION = {
-  value: "VALUE_ITERATION",
-  text: "Value Iteration"
-};
+import algorithms from "@/rl/config";
 
 @Component({
   name: "Header",
@@ -54,8 +51,11 @@ const VALUE_ITERATION = {
   }
 })
 class Header extends Vue {
-  algorithms = [VALUE_ITERATION];
-  algorithm = VALUE_ITERATION;
+  algorithms = Object.entries(algorithms).map(([value, { name }]) => ({
+    value,
+    text: name
+  }));
+  algorithm = this.$store.getters["algorithm/name"];
 
   grids = this.$store.getters["grid/defaultGridChoices"].map((g, i) => ({
     value: i,
@@ -68,6 +68,11 @@ class Header extends Vue {
   @Watch("grid")
   onGridChange(val) {
     this.$store.dispatch("changeGrid", val);
+  }
+
+  @Watch("algorithm")
+  onAlgorithmChange(val) {
+    this.$store.dispatch("changeAlgorithm", val);
   }
 
   closeGridEditor() {

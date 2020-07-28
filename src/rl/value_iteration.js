@@ -1,25 +1,9 @@
-class ValueIteration {
+import { IterativeAlgorithm } from "./algorithm";
+
+class ValueIteration extends IterativeAlgorithm {
   constructor(grid, gamma, initial_value = 0.0) {
-    this.grid = grid;
-    this.gamma = gamma;
-    this.initial_value = initial_value;
-    this._initializeStateValues();
+    super(grid, gamma, initial_value);
     this.value_diff = 0;
-  }
-
-  value(state) {
-    if (!state) {
-      return 0;
-    }
-    return this.states[this._s(state)].value;
-  }
-
-  setValue(state, value) {
-    this.states[this._s(state)].value = value;
-  }
-
-  getValue(state) {
-    return this.states[this._s(state)].value;
   }
 
   policy(state) {
@@ -65,35 +49,17 @@ class ValueIteration {
     }
   }
 
-  reset() {
-    this._initializeStateValues();
+  metric() {
+    return this.value_diff;
   }
 
-  resetInitial(initial_value) {
-    this.initial_value = initial_value;
-    this.reset();
-  }
-
-  _initializeStateValues() {
+  _initializeState() {
     this.states = Object.fromEntries(
       this.grid.states.map(state => [
         this._s(state),
         { value: this.initial_value }
       ])
     );
-  }
-
-  _getStateValue(transitions) {
-    return transitions
-      .map(
-        ([prob, nextState, reward]) =>
-          prob * (reward + this.gamma * this.value(nextState))
-      )
-      .reduce((x, y) => x + y, 0.0);
-  }
-
-  _s(state) {
-    return `${state[0]},${state[1]}`;
   }
 }
 
