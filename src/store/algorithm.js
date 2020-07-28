@@ -1,6 +1,10 @@
 const algorithmStore = {
   namespaced: true,
   state: () => ({
+    name: {
+      value: "value_iter",
+      text: "Value Iteration"
+    },
     running: false, // whether algorithm is being run
     currentIter: 0, // Iteration that is currently running
     currentRunTotalIters: 0, // Total iterations user asked
@@ -8,6 +12,9 @@ const algorithmStore = {
     valueHistory: []
   }),
   mutations: {
+    name(state, value) {
+      state.name = value;
+    },
     setAlgorithmRunning(state, value) {
       state.running = value;
     },
@@ -28,6 +35,7 @@ const algorithmStore = {
     }
   },
   getters: {
+    name: state => state.name,
     running: state => state.running,
     itersSoFar: state => state.iterSoFar,
     currentIter: state => state.currentIter,
@@ -57,7 +65,9 @@ const algorithmStore = {
     },
     cancelRun({ commit }) {
       commit("setAlgorithmRunning", false);
-    }
+    },
+    runIterationsMode() {},
+    callMethod() {}
   }
 };
 
