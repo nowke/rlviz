@@ -62,6 +62,19 @@
 
             <v-text-field
               :disabled="$store.getters['algorithm/running']"
+              v-model="noise"
+              type="number"
+              :min="0"
+              :max="1"
+              :step="0.1"
+              label="Noise"
+              :style="{ width: '60%' }"
+              outlined
+              dense
+            />
+
+            <v-text-field
+              :disabled="$store.getters['algorithm/running']"
               v-model="initialValue"
               type="number"
               :min="0"
@@ -90,12 +103,12 @@ import { toFloat } from "@/utils";
 import IterationChart from "./IterationChart.vue";
 
 @Component({
-  name: "Footer",
+  name: "Settings",
   components: {
     IterationChart
   }
 })
-class Footer extends Vue {
+class Settings extends Vue {
   height = 260;
   resizing = false;
   overlayZIndex = -1;
@@ -124,6 +137,14 @@ class Footer extends Vue {
     this.$store.commit("gamma", toFloat(value));
   }
 
+  get noise() {
+    return this.$store.getters.noise;
+  }
+
+  set noise(value) {
+    this.$store.commit("noise", toFloat(value));
+  }
+
   get initialValue() {
     return this.$store.getters.initialValue;
   }
@@ -149,7 +170,7 @@ class Footer extends Vue {
   }
 }
 
-export default Footer;
+export default Settings;
 </script>
 
 <style lang="scss">

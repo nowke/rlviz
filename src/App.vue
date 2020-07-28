@@ -58,7 +58,7 @@ class App extends Vue {
       config.terminals,
       config.disallowedStates,
       config.livingReward,
-      config.stochasticity
+      1 - this.$store.getters.noise
     );
   }
 
