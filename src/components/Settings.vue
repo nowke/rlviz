@@ -176,7 +176,7 @@ export default Settings;
 <style lang="scss">
 .settings {
   bottom: 0;
-  left: 0;
+  left: 56px;
   position: fixed;
   width: 100%;
   min-height: 60px;

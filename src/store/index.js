@@ -8,6 +8,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    page: "home",
     mode: "value",
     cellSize: 80,
     gamma: 0.9,
@@ -19,6 +20,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    page(state, page) {
+      state.page = page;
+    },
     mode(state, value) {
       state.mode = value;
     },
@@ -42,6 +46,7 @@ export default new Vuex.Store({
     }
   },
   getters: {
+    page: state => state.page,
     mode: state => state.mode,
     cellSize: state => state.cellSize,
     gamma: state => state.gamma,

@@ -44,7 +44,14 @@
         Generate
       </v-btn>
       <v-spacer />
-      <v-btn dense depressed color="primary" :disabled="!valid" @click="save">
+      <v-btn
+        dense
+        depressed
+        color="primary"
+        :disabled="!valid || saving"
+        :loading="saving"
+        @click="save"
+      >
         Save
       </v-btn>
     </div>
@@ -199,6 +206,7 @@ import { DEFAULT_GRID_CONFIG } from "@/grids";
 })
 class GridEditor extends Vue {
   @Prop() close;
+  @Prop() onSave;
 
   grid = DEFAULT_GRID_CONFIG;
   gridWidth = DEFAULT_GRID_CONFIG.width;
@@ -211,6 +219,7 @@ class GridEditor extends Vue {
     reward: 0
   };
   showConfigError = false;
+  saving = false;
 
   get cellSize() {
     return 80;
@@ -313,6 +322,7 @@ class GridEditor extends Vue {
   }
 
   save() {
+    this.saving = true;
     // Gete Terminal & Disabled states
     const terminals = [];
     const disallowedStates = [];
@@ -339,8 +349,24 @@ class GridEditor extends Vue {
       disallowedStates
     };
 
-    // TODO: Persist
-    console.log(grid);
+    // Save grid
+    this.$store.commit("grid/addGrid", grid);
+    this.saving = false;
+    this.reset();
+    this.onSave(grid);
+  }
+
+  reset() {
+    this.grid = DEFAULT_GRID_CONFIG;
+    this.gridWidth = DEFAULT_GRID_CONFIG.width;
+    this.gridHeight = DEFAULT_GRID_CONFIG.height;
+    this.gridName = DEFAULT_GRID_CONFIG.name;
+    this.selectedCells = {};
+    this.selectedCellProps = {
+      terminal: false,
+      enabled: false,
+      reward: 0
+    };
   }
 }
 

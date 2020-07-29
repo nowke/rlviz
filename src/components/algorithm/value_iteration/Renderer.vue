@@ -32,3 +32,9 @@ class Renderer extends Vue {
 
 export default Renderer;
 </script>
+
+<style lang="scss">
+.grid-wrapper {
+  margin-top: 60px;
+}
+</style>

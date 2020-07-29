@@ -20,20 +20,6 @@
         label="Select grid"
         class="select"
       />
-      <v-dialog
-        v-model="showGridEditor"
-        fullscreen
-        hide-overlay
-        transition="dialog-bottom-transition"
-        v-on:keydown="() => {}"
-      >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn v-bind="attrs" v-on="on" small dense>
-            New Grid
-          </v-btn>
-        </template>
-        <GridEdior :close="closeGridEditor" />
-      </v-dialog>
     </div>
   </header>
 </template>
@@ -41,14 +27,10 @@
 <script>
 import { Component, Vue, Watch } from "vue-property-decorator";
 
-import GridEdior from "@/components/grideditor/GridEditor.vue";
 import algorithms from "@/rl/config";
 
 @Component({
-  name: "Header",
-  components: {
-    GridEdior
-  }
+  name: "Header"
 })
 class Header extends Vue {
   algorithms = Object.entries(algorithms).map(([value, { name }]) => ({
@@ -63,8 +45,6 @@ class Header extends Vue {
   }));
   grid = this.$store.getters["grid/currentGridIndex"];
 
-  showGridEditor = false;
-
   @Watch("grid")
   onGridChange(val) {
     this.$store.dispatch("changeGrid", val);
@@ -73,10 +53,6 @@ class Header extends Vue {
   @Watch("algorithm")
   onAlgorithmChange(val) {
     this.$store.dispatch("changeAlgorithm", val);
-  }
-
-  closeGridEditor() {
-    this.showGridEditor = false;
   }
 }
 
