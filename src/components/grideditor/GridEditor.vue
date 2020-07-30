@@ -6,7 +6,7 @@
       </v-btn>
       <div :style="{ maxWidth: '300px', margin: '0 2em' }">
         <v-text-field
-          v-model="gridName"
+          v-model="name"
           label="Grid Name*"
           outlined
           dense
@@ -15,7 +15,7 @@
       </div>
       <div :style="{ maxWidth: '100px', margin: '0 0.5em' }">
         <v-text-field
-          v-model="gridWidth"
+          v-model="width"
           type="number"
           label="Width"
           outlined
@@ -29,7 +29,7 @@
       <v-icon small>mdi-close</v-icon>
       <div :style="{ maxWidth: '100px', margin: '0 0.5em' }">
         <v-text-field
-          v-model="gridHeight"
+          v-model="height"
           type="number"
           label="Height"
           outlined
@@ -207,11 +207,14 @@ import { DEFAULT_GRID_CONFIG } from "@/grids";
 class GridEditor extends Vue {
   @Prop() close;
   @Prop() onSave;
+  @Prop({ default: false, type: Boolean }) edit;
+  @Prop({ default: () => DEFAULT_GRID_CONFIG, type: Object }) gridConfig;
 
-  grid = DEFAULT_GRID_CONFIG;
-  gridWidth = DEFAULT_GRID_CONFIG.width;
-  gridHeight = DEFAULT_GRID_CONFIG.height;
-  gridName = DEFAULT_GRID_CONFIG.name;
+  grid = null;
+  width = null;
+  height = null;
+  name = null;
+
   selectedCells = {};
   selectedCellProps = {
     terminal: false,
@@ -228,12 +231,19 @@ class GridEditor extends Vue {
   get valid() {
     // Validates grid configurations
     return (
-      this.gridName.trim() &&
+      this.name.trim() &&
       this.grid.width > 1 &&
       this.grid.width < 13 &&
       this.grid.height > 1 &&
       this.grid.height < 13
     );
+  }
+
+  created() {
+    this.grid = this.gridConfig;
+    this.width = this.gridConfig.width;
+    this.height = this.gridConfig.height;
+    this.name = this.gridConfig.name;
   }
 
   @Watch("selectedCellProps", { immediate: true, deep: true })
@@ -275,8 +285,8 @@ class GridEditor extends Vue {
   }
 
   generate() {
-    const width = parseInt(this.gridWidth, 10);
-    const height = parseInt(this.gridHeight, 10);
+    const width = parseInt(this.width, 10);
+    const height = parseInt(this.height, 10);
 
     // Validate
     if (width < 2 || width > 12 || height < 2 || height > 12) {
@@ -285,7 +295,7 @@ class GridEditor extends Vue {
     }
 
     // Generate `grid`
-    const grid = { name: this.gridName, width, height, states: {} };
+    const grid = { name: this.name, width, height, states: {} };
     for (const i of Array(height).keys()) {
       for (const j of Array(width).keys()) {
         grid.states[`${i},${j}`] = {
@@ -322,7 +332,9 @@ class GridEditor extends Vue {
   }
 
   save() {
+    this.deselectAll();
     this.saving = true;
+
     // Gete Terminal & Disabled states
     const terminals = [];
     const disallowedStates = [];
@@ -338,29 +350,26 @@ class GridEditor extends Vue {
       }
     }
 
-    // Convert `grid` into standard format
-    const grid = {
-      name: this.gridName,
-      width: this.grid.width,
-      height: this.grid.height,
-      livingReward: 0, // TODO: Move this
-      stochasticity: 0.8, // TODO: Move this
-      terminals,
-      disallowedStates
-    };
+    this.grid.name = this.name;
 
     // Save grid
-    this.$store.commit("grid/addGrid", grid);
+    if (this.edit) {
+      // Update existing grid
+      this.$store.commit("grid/updateGrid", this.grid);
+    } else {
+      // Add new grid
+      this.$store.commit("grid/addGrid", this.grid);
+    }
     this.saving = false;
     this.reset();
-    this.onSave(grid);
+    this.onSave(this.grid);
   }
 
   reset() {
     this.grid = DEFAULT_GRID_CONFIG;
-    this.gridWidth = DEFAULT_GRID_CONFIG.width;
-    this.gridHeight = DEFAULT_GRID_CONFIG.height;
-    this.gridName = DEFAULT_GRID_CONFIG.name;
+    this.width = DEFAULT_GRID_CONFIG.width;
+    this.height = DEFAULT_GRID_CONFIG.height;
+    this.name = DEFAULT_GRID_CONFIG.name;
     this.selectedCells = {};
     this.selectedCellProps = {
       terminal: false,

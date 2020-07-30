@@ -24,6 +24,9 @@ const gridStore = {
     },
     removeGrid(state, index) {
       state.grids.splice(index, 1);
+    },
+    updateGrid(state, grid) {
+      state.grids[grid.index] = grid;
     }
   },
   getters: {

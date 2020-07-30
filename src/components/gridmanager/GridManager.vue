@@ -6,28 +6,22 @@
           <h2>Grid Manager</h2>
         </v-col>
         <v-col :cols="6">
-          <v-dialog
-            v-model="showGridEditor"
-            fullscreen
-            hide-overlay
-            transition="dialog-bottom-transition"
-            v-on:keydown="() => {}"
+          <v-btn
+            @click="
+              () => {
+                isGridEdit = false;
+                gridToEdit = null;
+                showGridEditor = true;
+              }
+            "
+            dense
+            depressed
+            color="primary"
+            class="float-right"
           >
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                v-bind="attrs"
-                v-on="on"
-                dense
-                depressed
-                color="primary"
-                class="float-right"
-              >
-                <v-icon>mdi-plus</v-icon>
-                New Grid
-              </v-btn>
-            </template>
-            <GridEdior :close="closeGridEditor" :onSave="onGridSave" />
-          </v-dialog>
+            <v-icon>mdi-plus</v-icon>
+            New Grid
+          </v-btn>
         </v-col>
       </v-row>
 
@@ -46,7 +40,16 @@
           {{ item.width }} &times; {{ item.height }}
         </template>
         <template v-slot:item.actions="{ item }">
-          <v-btn icon disabled>
+          <v-btn
+            icon
+            @click="
+              () => {
+                isGridEdit = true;
+                gridToEdit = item;
+                showGridEditor = true;
+              }
+            "
+          >
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
           <v-btn icon @click="() => showDeleteDialog(item)">
@@ -72,6 +75,7 @@
         </v-btn>
       </template>
     </v-snackbar>
+
     <v-dialog v-model="deleteDialog" v-if="gridToDelete" max-width="350">
       <v-card>
         <v-card-title class="text-left text-subtitle-1">
@@ -89,6 +93,22 @@
           </v-btn>
         </v-card-actions>
       </v-card>
+    </v-dialog>
+
+    <v-dialog
+      v-model="showGridEditor"
+      fullscreen
+      hide-overlay
+      transition="dialog-bottom-transition"
+      v-on:keydown="() => {}"
+    >
+      <GridEdior
+        v-if="showGridEditor"
+        :close="closeGridEditor"
+        :onSave="onGridSave"
+        :edit="isGridEdit"
+        :gridConfig="gridToEdit || undefined"
+      />
     </v-dialog>
   </div>
 </template>
@@ -119,6 +139,8 @@ class GridManager extends Vue {
   }));
 
   showGridEditor = false;
+  isGridEdit = false;
+  gridToEdit = null;
   snackMsg = "";
   snackbar = false;
 
@@ -129,7 +151,8 @@ class GridManager extends Vue {
     this.$store.subscribe(mutation => {
       if (
         mutation.type === "grid/addGrid" ||
-        mutation.type === "grid/removeGrid"
+        mutation.type === "grid/removeGrid" ||
+        mutation.type === "grid/updateGrid"
       ) {
         this.reloadGrids();
       }
