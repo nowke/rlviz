@@ -51,15 +51,7 @@ class GridWorldContainer extends Vue {
   }
 
   getGridWorld(config) {
-    return new GridWorld(
-      config.width,
-      config.height,
-      config.start,
-      config.terminals,
-      config.disallowedStates,
-      config.livingReward,
-      1 - this.$store.getters.noise
-    );
+    return new GridWorld(config, 1 - this.$store.getters.noise);
   }
 
   getAlgorithmClass(grid) {

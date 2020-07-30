@@ -99,7 +99,7 @@ class Grid extends Vue {
 
   toState(i, j) {
     if (this.grid) {
-      return [j + 1, this.grid.height - i];
+      return `${i},${j}`;
     }
   }
 

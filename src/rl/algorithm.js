@@ -8,17 +8,17 @@ export class IterativeAlgorithm {
 
   value(state) {
     if (!state) {
-      return 0;
+      return 0.0;
     }
-    return this.states[this._s(state)].value;
+    return this.states[state].value;
   }
 
   setValue(state, value) {
-    this.states[this._s(state)].value = value;
+    this.states[state].value = value;
   }
 
   getValue(state) {
-    return this.states[this._s(state)].value;
+    return this.states[state].value;
   }
 
   reset() {
@@ -41,9 +41,5 @@ export class IterativeAlgorithm {
           prob * (reward + this.gamma * this.value(nextState))
       )
       .reduce((x, y) => x + y, 0.0);
-  }
-
-  _s(state) {
-    return `${state[0]},${state[1]}`;
   }
 }

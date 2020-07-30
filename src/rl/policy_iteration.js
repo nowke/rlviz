@@ -8,11 +8,11 @@ class PolicyIteration extends IterativeAlgorithm {
   }
 
   policy(state) {
-    return this.states[this._s(state)].policy;
+    return this.states[state].policy;
   }
 
   setPolicy(state, policy) {
-    this.states[this._s(state)].policy = policy;
+    this.states[state].policy = policy;
   }
 
   async run(iterations, mode = null) {
@@ -40,7 +40,7 @@ class PolicyIteration extends IterativeAlgorithm {
 
       // Calculate values
       const values = [];
-      for (const state of this.grid.states) {
+      for (const state of Object.keys(this.grid.states)) {
         const previousValue = this.value(state);
         const action = this.policy(state);
         const transitions = this.grid.getTransitions(state, action);
@@ -72,7 +72,7 @@ class PolicyIteration extends IterativeAlgorithm {
 
     // Calculate new policies
     const policies = [];
-    for (const state of this.grid.states) {
+    for (const state of Object.keys(this.grid.states)) {
       let maxQValue = Number.NEGATIVE_INFINITY;
       let maxAction = null;
 
@@ -105,15 +105,14 @@ class PolicyIteration extends IterativeAlgorithm {
 
   _initializeState() {
     const defaultAction = this.grid.actions[0];
-    this.states = Object.fromEntries(
-      this.grid.states.map(state => [
-        this._s(state),
-        {
-          value: this.initial_value,
-          policy: this.grid.isTerminal(state) ? null : defaultAction
-        }
-      ])
-    );
+    const states = {};
+    for (const state of Object.keys(this.grid.states)) {
+      states[state] = {
+        value: this.initial_value,
+        policy: this.grid.isTerminal(state) ? null : defaultAction
+      };
+    }
+    this.states = states;
   }
 }
 

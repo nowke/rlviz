@@ -252,7 +252,7 @@ class GridEditor extends Vue {
     for (const cell of Object.keys(this.selectedCells)) {
       this.grid.states[cell].terminal = vals.terminal;
       this.grid.states[cell].disabled = !vals.enabled;
-      this.grid.states[cell].reward = vals.reward;
+      this.grid.states[cell].reward = parseFloat(vals.reward);
     }
   }
 
@@ -334,22 +334,6 @@ class GridEditor extends Vue {
   save() {
     this.deselectAll();
     this.saving = true;
-
-    // Gete Terminal & Disabled states
-    const terminals = [];
-    const disallowedStates = [];
-    for (const c of Object.keys(this.grid.states)) {
-      const props = this.grid.states[c];
-      const rowcols = c.split(",").map(i => parseInt(i, 10));
-      const state = this.toState(rowcols[0], rowcols[1]);
-
-      if (props.terminal) {
-        terminals.push([state[0], state[1], props.reward]);
-      } else if (props.disabled) {
-        disallowedStates.push([state[0], state[1]]);
-      }
-    }
-
     this.grid.name = this.name;
 
     // Save grid

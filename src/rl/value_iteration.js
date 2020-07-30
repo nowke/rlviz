@@ -28,7 +28,7 @@ class ValueIteration extends IterativeAlgorithm {
     for (let i = 1; i <= iterations; i++) {
       // Calculate new state values
       const stateValues = [];
-      for (const state of this.grid.states) {
+      for (const state of Object.keys(this.grid.states)) {
         const values = [];
         for (const action of this.grid.actions) {
           const transitions = this.grid.getTransitions(state, action);
@@ -54,12 +54,13 @@ class ValueIteration extends IterativeAlgorithm {
   }
 
   _initializeState() {
-    this.states = Object.fromEntries(
-      this.grid.states.map(state => [
-        this._s(state),
-        { value: this.initial_value }
-      ])
-    );
+    const states = {};
+    for (const state of Object.keys(this.grid.states)) {
+      states[state] = {
+        value: this.initial_value
+      };
+    }
+    this.states = states;
   }
 }
 
