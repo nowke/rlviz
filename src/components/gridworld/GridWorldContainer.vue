@@ -36,7 +36,10 @@ class GridWorldContainer extends Vue {
 
     this.$store.subscribeAction(action => {
       if (action.type === "changeGrid") {
-        const choices = this.$store.getters["grid/defaultGridChoices"];
+        const choices = [
+          ...this.$store.state.grid.defaultGridChoices,
+          ...this.$store.state.grid.grids
+        ];
         const config = choices[action.payload];
         this.reset(config);
       } else if (action.type === "algorithm/reset") {

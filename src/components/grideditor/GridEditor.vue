@@ -207,6 +207,7 @@ import { DEFAULT_GRID_CONFIG } from "@/grids";
 class GridEditor extends Vue {
   @Prop() close;
   @Prop() onSave;
+  @Prop() onUpdate;
   @Prop({ default: false, type: Boolean }) edit;
   @Prop({ default: () => DEFAULT_GRID_CONFIG, type: Object }) gridConfig;
 
@@ -295,7 +296,13 @@ class GridEditor extends Vue {
     }
 
     // Generate `grid`
-    const grid = { name: this.name, width, height, states: {} };
+    const grid = {
+      name: this.name,
+      index: this.grid.index,
+      width,
+      height,
+      states: {}
+    };
     for (const i of Array(height).keys()) {
       for (const j of Array(width).keys()) {
         grid.states[`${i},${j}`] = {
@@ -340,13 +347,14 @@ class GridEditor extends Vue {
     if (this.edit) {
       // Update existing grid
       this.$store.commit("grid/updateGrid", this.grid);
+      this.onUpdate(this.grid);
     } else {
       // Add new grid
       this.$store.commit("grid/addGrid", this.grid);
+      this.onSave(this.grid);
     }
     this.saving = false;
     this.reset();
-    this.onSave(this.grid);
   }
 
   reset() {

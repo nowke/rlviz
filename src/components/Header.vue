@@ -39,10 +39,7 @@ class Header extends Vue {
   }));
   algorithm = this.$store.getters["algorithm/name"];
 
-  grids = this.$store.getters["grid/defaultGridChoices"].map((g, i) => ({
-    value: i,
-    text: g.name
-  }));
+  grids = [];
   grid = this.$store.getters["grid/currentGridIndex"];
 
   @Watch("grid")
@@ -53,6 +50,28 @@ class Header extends Vue {
   @Watch("algorithm")
   onAlgorithmChange(val) {
     this.$store.dispatch("changeAlgorithm", val);
+  }
+
+  created() {
+    this.setGrids();
+    this.$store.subscribe(mutation => {
+      if (
+        mutation.type === "grid/addGrid" ||
+        mutation.type === "grid/removeGrid" ||
+        mutation.type === "grid/updateGrid"
+      ) {
+        this.setGrids();
+      }
+    });
+  }
+
+  setGrids() {
+    const defaultGrids = this.$store.getters["grid/defaultGridChoices"];
+    const customGrids = this.$store.getters["grid/grids"];
+    this.grids = [...defaultGrids, ...customGrids].map((g, i) => ({
+      value: i,
+      text: g.name
+    }));
   }
 }
 

@@ -5,7 +5,8 @@ export const syncGridStorage = store => {
   store.subscribe((mutation, state) => {
     if (
       mutation.type === "grid/addGrid" ||
-      mutation.type === "grid/removeGrid"
+      mutation.type === "grid/removeGrid" ||
+      mutation.type === "grid/updateGrid"
     ) {
       localStorage.setItem("grids", JSON.stringify(state.grid.grids));
     }

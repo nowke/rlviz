@@ -106,6 +106,7 @@
         v-if="showGridEditor"
         :close="closeGridEditor"
         :onSave="onGridSave"
+        :onUpdate="onGridUpdate"
         :edit="isGridEdit"
         :gridConfig="gridToEdit || undefined"
       />
@@ -166,6 +167,12 @@ class GridManager extends Vue {
   onGridSave(grid) {
     this.showGridEditor = false;
     this.snackMsg = `Successfully added grid '${grid.name}'`;
+    this.snackbar = true;
+  }
+
+  onGridUpdate(grid) {
+    this.showGridEditor = false;
+    this.snackMsg = `Successfully updated grid '${grid.name}'`;
     this.snackbar = true;
   }
 

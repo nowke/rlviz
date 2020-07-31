@@ -31,8 +31,10 @@ const gridStore = {
   },
   getters: {
     defaultGridChoices: state => state.defaultGridChoices,
+    gridChoices: state => [...state.defaultGridChoices, ...state.grids],
     currentGridIndex: state => state.currentGridIndex,
-    currentGrid: state => state.defaultGridChoices[state.currentGridIndex],
+    currentGrid: state =>
+      [...state.defaultGridChoices, ...state.grids][state.currentGridIndex],
     grids: state => state.grids
   }
 };
