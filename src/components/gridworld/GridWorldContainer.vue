@@ -23,7 +23,7 @@ import algorithmConfig from "@/rl/config";
   }
 })
 class GridWorldContainer extends Vue {
-  config = this.$store.getters["grid/currentGrid"];
+  config = this.$store.getters["grid/selectedGrid"];
   grid = null;
   algo = null;
   component =
@@ -36,11 +36,7 @@ class GridWorldContainer extends Vue {
 
     this.$store.subscribeAction(action => {
       if (action.type === "changeGrid") {
-        const choices = [
-          ...this.$store.state.grid.defaultGridChoices,
-          ...this.$store.state.grid.grids
-        ];
-        const config = choices[action.payload];
+        const config = this.$store.getters["grid/grids"][action.payload];
         this.reset(config);
       } else if (action.type === "algorithm/reset") {
         this.reset(this.config);

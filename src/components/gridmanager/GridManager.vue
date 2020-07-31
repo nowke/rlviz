@@ -134,10 +134,7 @@ class GridManager extends Vue {
     { text: "Configuration", value: "configuration", sortable: false },
     { text: "Actions", value: "actions", sortable: false }
   ];
-  grids = this.$store.getters["grid/grids"].map((grid, index) => ({
-    ...grid,
-    index
-  }));
+  grids = [];
 
   showGridEditor = false;
   isGridEdit = false;
@@ -155,9 +152,10 @@ class GridManager extends Vue {
         mutation.type === "grid/removeGrid" ||
         mutation.type === "grid/updateGrid"
       ) {
-        this.reloadGrids();
+        this.setGrids();
       }
     });
+    this.setGrids();
   }
 
   closeGridEditor() {
@@ -176,11 +174,9 @@ class GridManager extends Vue {
     this.snackbar = true;
   }
 
-  reloadGrids() {
-    this.grids = this.$store.getters["grid/grids"].map((grid, index) => ({
-      ...grid,
-      index
-    }));
+  setGrids() {
+    const grids = this.$store.getters["grid/grids"];
+    this.grids = Object.keys(grids).map(grid => grids[grid]);
   }
 
   showDeleteDialog(grid) {
@@ -190,7 +186,7 @@ class GridManager extends Vue {
 
   deleteGrid() {
     if (this.gridToDelete) {
-      this.$store.commit("grid/removeGrid", this.gridToDelete.index);
+      this.$store.commit("grid/removeGrid", this.gridToDelete.id);
       this.deleteDialog = false;
       this.snackMsg = `Successfully deleted grid '${this.gridToDelete.name}'`;
       this.snackbar = true;

@@ -41,7 +41,7 @@ import Cell from "./Cell.vue";
   }
 })
 class Grid extends Vue {
-  config = this.$store.getters["grid/currentGrid"];
+  config = this.$store.getters["grid/selectedGrid"];
   @Prop() grid;
   @Prop() algo;
   cancelRunSignalled = false;

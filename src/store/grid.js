@@ -1,41 +1,50 @@
-import { GRIDS } from "@/grids";
+import { DEFAULT_GRIDS } from "@/grids";
+import { GRIDS_LOCALSTORAGE_KEY } from "@/constants";
 
 const gridStore = {
   namespaced: true,
   state: () => ({
-    currentGridIndex: 0,
-    defaultGridChoices: GRIDS,
-    grids: []
+    grids: {},
+    selectedGridId: null
   }),
   mutations: {
-    setCurrentGridIndex(state, value) {
-      state.currentGridIndex = value;
-    },
-    initializeGridsFromStorage(state) {
-      if (localStorage.getItem("grids")) {
-        const grids = JSON.parse(localStorage.getItem("grids"));
-        state.grids = grids;
-      } else {
-        state.grids = [];
-      }
-    },
     addGrid(state, grid) {
-      state.grids.push(grid);
+      state.grids[grid.id] = grid;
     },
-    removeGrid(state, index) {
-      state.grids.splice(index, 1);
+    removeGrid(state, gridId) {
+      delete state.grids[gridId];
     },
     updateGrid(state, grid) {
-      state.grids[grid.index] = grid;
+      state.grids[grid.id] = grid;
+    },
+    selectGrid(state, gridId) {
+      state.selectedGridId = gridId;
+    },
+    setGrids(state, grids) {
+      state.grids = grids;
     }
   },
   getters: {
-    defaultGridChoices: state => state.defaultGridChoices,
-    gridChoices: state => [...state.defaultGridChoices, ...state.grids],
-    currentGridIndex: state => state.currentGridIndex,
-    currentGrid: state =>
-      [...state.defaultGridChoices, ...state.grids][state.currentGridIndex],
+    selectedGridId: state => state.selectedGridId,
+    selectedGrid: state => state.grids[state.selectedGridId],
     grids: state => state.grids
+  },
+  actions: {
+    initializeGridsFromStorage({ commit }) {
+      if (localStorage.getItem(GRIDS_LOCALSTORAGE_KEY)) {
+        const grids = JSON.parse(localStorage.getItem(GRIDS_LOCALSTORAGE_KEY));
+        commit("setGrids", grids);
+
+        if (grids.GRID_CLASSIC_4x3) {
+          commit("selectGrid", grids.GRID_CLASSIC_4x3.id);
+        } else {
+          commit("selectGrid", grids[Object.keys(grids)[0]].id);
+        }
+      } else {
+        commit("setGrids", DEFAULT_GRIDS);
+        commit("selectGrid", DEFAULT_GRIDS.GRID_CLASSIC_4x3.id);
+      }
+    }
   }
 };
 

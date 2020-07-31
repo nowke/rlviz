@@ -1,4 +1,5 @@
 export const GRID_CLASSIC_4x3 = {
+  id: "GRID_CLASSIC_4x3",
   name: "Classic 4x3",
   width: 4,
   height: 3,
@@ -19,6 +20,7 @@ export const GRID_CLASSIC_4x3 = {
 };
 
 export const GRID_BRIDGE_CROSSING = {
+  id: "GRID_BRIDGE_CROSSING",
   name: "Bridge Crossing",
   width: 7,
   height: 3,
@@ -47,10 +49,14 @@ export const GRID_BRIDGE_CROSSING = {
   }
 };
 
-export const GRIDS = [GRID_CLASSIC_4x3, GRID_BRIDGE_CROSSING];
+export const DEFAULT_GRIDS = {
+  GRID_CLASSIC_4x3,
+  GRID_BRIDGE_CROSSING
+};
 
 // GridEditor
 export const DEFAULT_GRID_CONFIG = {
+  id: "",
   name: "",
   width: 5,
   height: 4,

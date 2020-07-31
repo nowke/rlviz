@@ -14,7 +14,7 @@ new Vue({
   store,
   beforeCreate() {
     syncGridStorage(this.$store);
-    this.$store.commit("grid/initializeGridsFromStorage");
+    this.$store.dispatch("grid/initializeGridsFromStorage");
   },
   vuetify,
   render: h => h(App)

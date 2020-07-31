@@ -40,11 +40,11 @@ class Header extends Vue {
   algorithm = this.$store.getters["algorithm/name"];
 
   grids = [];
-  grid = this.$store.getters["grid/currentGridIndex"];
+  grid = this.$store.getters["grid/selectedGridId"];
 
   @Watch("grid")
-  onGridChange(val) {
-    this.$store.dispatch("changeGrid", val);
+  onGridChange(gridId) {
+    this.$store.dispatch("changeGrid", gridId);
   }
 
   @Watch("algorithm")
@@ -66,11 +66,10 @@ class Header extends Vue {
   }
 
   setGrids() {
-    const defaultGrids = this.$store.getters["grid/defaultGridChoices"];
-    const customGrids = this.$store.getters["grid/grids"];
-    this.grids = [...defaultGrids, ...customGrids].map((g, i) => ({
-      value: i,
-      text: g.name
+    const grids = this.$store.getters["grid/grids"];
+    this.grids = Object.keys(grids).map(grid => ({
+      value: grid,
+      text: grids[grid].name
     }));
   }
 }

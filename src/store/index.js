@@ -56,8 +56,8 @@ export default new Vuex.Store({
     delay: state => state.control.delay
   },
   actions: {
-    changeGrid({ commit, dispatch }, index) {
-      commit("grid/setCurrentGridIndex", index);
+    changeGrid({ commit, dispatch }, gridId) {
+      commit("grid/selectGrid", gridId);
       dispatch("algorithm/reset");
     },
     changeAlgorithm({ commit, dispatch }, algorithm) {

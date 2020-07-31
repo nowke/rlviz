@@ -197,6 +197,7 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
 import Cell from "./Cell.vue";
 import { DEFAULT_GRID_CONFIG } from "@/grids";
+import { uuid } from "@/utils";
 
 @Component({
   name: "GridEditor",
@@ -299,6 +300,7 @@ class GridEditor extends Vue {
     const grid = {
       name: this.name,
       index: this.grid.index,
+      id: this.grid.id,
       width,
       height,
       states: {}
@@ -350,6 +352,7 @@ class GridEditor extends Vue {
       this.onUpdate(this.grid);
     } else {
       // Add new grid
+      this.grid.id = uuid();
       this.$store.commit("grid/addGrid", this.grid);
       this.onSave(this.grid);
     }
