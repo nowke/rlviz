@@ -4,7 +4,7 @@
     <div class="grid-wrapper">
       <Grid :grid="grid" :algo="algo" />
     </div>
-    <Settings />
+    <Settings graphTitle="Avg. Value Change" />
   </fragment>
 </template>
 

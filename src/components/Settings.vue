@@ -88,7 +88,7 @@
           </v-col>
 
           <v-col :cols="4">
-            <IterationChart />
+            <IterationChart :title="graphTitle" />
           </v-col>
         </v-row>
       </div>
@@ -97,7 +97,7 @@
 </template>
 
 <script>
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from "vue-property-decorator";
 
 import { toFloat } from "@/utils";
 import IterationChart from "./IterationChart.vue";
@@ -109,6 +109,7 @@ import IterationChart from "./IterationChart.vue";
   }
 })
 class Settings extends Vue {
+  @Prop() graphTitle;
   height = 260;
   resizing = false;
   overlayZIndex = -1;

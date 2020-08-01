@@ -34,7 +34,7 @@
     <div class="grid-wrapper">
       <Grid :grid="grid" :algo="algo" />
     </div>
-    <Settings />
+    <Settings graphTitle="No. of Policy changes" />
   </fragment>
 </template>
 

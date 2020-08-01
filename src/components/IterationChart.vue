@@ -1,8 +1,8 @@
 <template>
   <div v-if="chartData.length > -1">
-    <span :style="{ display: 'block', marginBottom: '8px' }"
-      >Avg. Value Change</span
-    >
+    <span :style="{ display: 'block', marginBottom: '8px' }">
+      {{ title }}
+    </span>
     <line-chart
       :data="chartData"
       width="100%"
@@ -29,12 +29,14 @@
 </template>
 
 <script>
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component({
   name: "IterationChart"
 })
 class IterationChart extends Vue {
+  @Prop() title;
+
   get chartData() {
     const valueHistory = this.$store.getters["algorithm/valueHistory"];
     let finalValues;
