@@ -5,6 +5,7 @@
       absolute
       :value="iterProgressPerc"
       :height="2"
+      :style="{ left: '56px' }"
     />
     <div class="controls-container">
       <div class="controls">

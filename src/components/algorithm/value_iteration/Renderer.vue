@@ -1,15 +1,19 @@
 <template>
-  <fragment>
-    <Controls />
-    <div class="grid-wrapper">
-      <Grid :grid="grid" :algo="algo" />
-    </div>
-    <Settings graphTitle="Avg. Value Change" />
-  </fragment>
+  <splitpanes class="default-theme split-pane-container" horizontal>
+    <pane size="60" :style="{ overflowY: 'auto' }">
+      <Controls />
+      <div class="grid-wrapper">
+        <Grid :grid="grid" :algo="algo" />
+      </div>
+    </pane>
+    <pane size="40" max-size="70" min-size="5" :style="{ overflowY: 'auto' }">
+      <Settings graphTitle="Avg. Value Change" />
+    </pane>
+  </splitpanes>
 </template>
 
 <script>
-import { Fragment } from "vue-fragment";
+import { Splitpanes, Pane } from "splitpanes";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 import Controls from "@/components/algorithm/common/Controls.vue";
@@ -19,10 +23,11 @@ import Grid from "@/components/gridworld/Grid.vue";
 @Component({
   name: "ValueIterRenderer",
   components: {
-    Fragment,
     Controls,
     Grid,
-    Settings
+    Settings,
+    Splitpanes,
+    Pane
   }
 })
 class Renderer extends Vue {
@@ -33,8 +38,17 @@ class Renderer extends Vue {
 export default Renderer;
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .grid-wrapper {
-  margin-top: 60px;
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+
+.split-pane-container {
+  flex: 1 1 auto;
+
+  .splitpanes__pane {
+    background-color: #fff !important;
+  }
 }
 </style>

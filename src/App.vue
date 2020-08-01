@@ -10,6 +10,7 @@
 
 <script>
 import { Component, Vue } from "vue-property-decorator";
+import "splitpanes/dist/splitpanes.css";
 
 import NavDrawer from "@/components/NavDrawer.vue";
 import GridWorldContainer from "@/components/gridworld/GridWorldContainer.vue";

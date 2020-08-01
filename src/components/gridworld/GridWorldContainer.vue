@@ -1,5 +1,5 @@
 <template>
-  <div :style="{ marginLeft: '56px' }">
+  <div class="gridworld-container">
     <Header />
     <component :is="component" :grid="grid" :algo="algo" />
   </div>
@@ -80,3 +80,14 @@ class GridWorldContainer extends Vue {
 
 export default GridWorldContainer;
 </script>
+
+<style lang="scss" scoped>
+.gridworld-container {
+  padding-left: 56px;
+  display: flex;
+  flex-direction: column;
+  min-width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+</style>
