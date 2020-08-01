@@ -40,21 +40,23 @@
           {{ item.width }} &times; {{ item.height }}
         </template>
         <template v-slot:item.actions="{ item }">
-          <v-btn
-            icon
-            @click="
-              () => {
-                isGridEdit = true;
-                gridToEdit = item;
-                showGridEditor = true;
-              }
-            "
-          >
-            <v-icon>mdi-pencil</v-icon>
-          </v-btn>
-          <v-btn icon @click="() => showDeleteDialog(item)">
-            <v-icon>mdi-delete</v-icon>
-          </v-btn>
+          <template v-if="item.editable">
+            <v-btn
+              icon
+              @click="
+                () => {
+                  isGridEdit = true;
+                  gridToEdit = item;
+                  showGridEditor = true;
+                }
+              "
+            >
+              <v-icon>mdi-pencil</v-icon>
+            </v-btn>
+            <v-btn icon @click="() => showDeleteDialog(item)">
+              <v-icon>mdi-delete</v-icon>
+            </v-btn>
+          </template>
         </template>
       </v-data-table>
     </div>
@@ -118,6 +120,7 @@
 import { Component, Vue } from "vue-property-decorator";
 
 import GridEdior from "@/components/grideditor/GridEditor.vue";
+import { DEFAULT_GRIDS } from "@/grids";
 
 @Component({
   name: "GridManager",
@@ -176,7 +179,10 @@ class GridManager extends Vue {
 
   setGrids() {
     const grids = this.$store.getters["grid/grids"];
-    this.grids = Object.keys(grids).map(grid => grids[grid]);
+    this.grids = Object.keys(grids).map(grid => ({
+      ...grids[grid],
+      editable: !DEFAULT_GRIDS[grid]
+    }));
   }
 
   showDeleteDialog(grid) {

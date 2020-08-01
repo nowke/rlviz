@@ -10,6 +10,7 @@
   "dependencies": {
     "chart.js": "^2.9.3",
     "core-js": "^3.6.5",
+    "lodash.clonedeep": "^4.5.0",
     "vue": "^2.6.11",
     "vue-chartkick": "^0.6.1",
     "vue-fragment": "^1.5.1",

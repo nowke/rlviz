@@ -1,3 +1,5 @@
+import cloneDeep from "lodash.clonedeep";
+
 import { DEFAULT_GRIDS } from "@/grids";
 import { GRIDS_LOCALSTORAGE_KEY } from "@/constants";
 
@@ -41,7 +43,7 @@ const gridStore = {
           commit("selectGrid", grids[Object.keys(grids)[0]].id);
         }
       } else {
-        commit("setGrids", DEFAULT_GRIDS);
+        commit("setGrids", cloneDeep(DEFAULT_GRIDS));
         commit("selectGrid", DEFAULT_GRIDS.GRID_CLASSIC_4x3.id);
       }
     },
