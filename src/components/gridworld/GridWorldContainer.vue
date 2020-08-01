@@ -45,6 +45,13 @@ class GridWorldContainer extends Vue {
     this.$store.subscribe(mutation => {
       if (mutation.type === "algorithm/name") {
         this.component = algorithmConfig[mutation.payload.value].component;
+      } else if (
+        mutation.type === "grid/updateGrid" &&
+        mutation.payload.id === this.config.id
+      ) {
+        // The current grid got updated
+        this.config = this.$store.getters["grid/grids"][mutation.payload.id];
+        this.$store.dispatch("algorithm/reset");
       }
     });
   }

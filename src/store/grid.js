@@ -44,6 +44,14 @@ const gridStore = {
         commit("setGrids", DEFAULT_GRIDS);
         commit("selectGrid", DEFAULT_GRIDS.GRID_CLASSIC_4x3.id);
       }
+    },
+    setDefaultGrid({ dispatch, state }) {
+      const grids = state.grids;
+      if (grids.GRID_CLASSIC_4x3) {
+        dispatch("changeGrid", state.grids.GRID_CLASSIC_4x3.id, { root: true });
+      } else {
+        dispatch("changeGrid", grids[Object.keys(grids)[0]].id, { root: true });
+      }
     }
   }
 };

@@ -62,6 +62,13 @@ class Header extends Vue {
       ) {
         this.setGrids();
       }
+      if (
+        mutation.type === "grid/removeGrid" &&
+        this.grid === mutation.payload
+      ) {
+        this.$store.dispatch("grid/setDefaultGrid");
+        this.$store.dispatch("algorithm/reset");
+      }
     });
   }
 
