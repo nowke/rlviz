@@ -42,7 +42,7 @@ class Arrow extends Vue {
         viewBox: "-0.5 -0.5 91 51",
         x: this.x + this.size / 5.0,
         y: this.y + this.size / 3.0,
-        transform: "none",
+        transform: "rotate(0,45,25)",
         d:
           "M 0 18.76 L 72.86 18.76 L 72.86 0 L 90 25 L 72.86 50 L 72.86 31.24 L 0 31.24 Z"
       },
