@@ -33,3 +33,20 @@ export const uuid = () => {
       .substr(2, 9)
   );
 };
+
+/**
+ * Download a JS object as JSON file
+ *
+ * @param {object} data - Javascript object to be downlded as JSON
+ * @param {string} title - Title of the file without extension
+ */
+export const downloadJSON = (data, title) => {
+  const content = JSON.stringify(data);
+  const blob = new Blob([content], {
+    type: "application/json"
+  });
+  const link = document.createElement("a");
+  link.href = window.URL.createObjectURL(blob);
+  link.download = `${title}.json`;
+  link.click();
+};

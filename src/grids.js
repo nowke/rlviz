@@ -1,3 +1,5 @@
+import Ajv from "ajv";
+
 export const GRID_CLASSIC_4x3 = {
   id: "GRID_CLASSIC_4x3",
   name: "Classic 4x3",
@@ -227,4 +229,41 @@ export const DEFAULT_GRID_CONFIG = {
     "3,3": { terminal: false, disabled: false, reward: 0 },
     "3,4": { terminal: true, disabled: false, reward: -1 }
   }
+};
+
+/**
+ * Validate grid object against JSON schema and states
+ *
+ * @param {object} grid - Grid object
+ */
+export const validateGrid = grid => {
+  const schema = require("@/assets/grid_schema.json");
+  const ajv = new Ajv();
+  const validate = ajv.compile(schema);
+  const valid = validate(grid);
+
+  if (!valid) return false;
+
+  // Validate `states` according to `width` and `height`
+  const size = grid.width * grid.height;
+  const states = [...Array(size).keys()].map(
+    i => `${i % grid.height},${i % grid.width}`
+  );
+
+  for (const state of states) {
+    const gridState = grid.states[state];
+    if (gridState) {
+      if (
+        typeof gridState.terminal !== "boolean" ||
+        typeof gridState.disabled !== "boolean" ||
+        typeof gridState.reward !== "number"
+      ) {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  return true;
 };
