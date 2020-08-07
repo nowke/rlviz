@@ -1,8 +1,9 @@
 export class IterativeAlgorithm {
-  constructor(grid, gamma, initial_value = 0.0) {
+  constructor(grid, gamma, initial_value = 0.0, living_reward = 0.0) {
     this.grid = grid;
     this.gamma = gamma;
     this.initial_value = initial_value;
+    this.living_reward = living_reward;
     this._initializeState();
   }
 

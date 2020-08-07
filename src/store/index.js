@@ -14,6 +14,7 @@ export default new Vuex.Store({
     gamma: 0.9,
     initialValue: 0.0,
     noise: 0.2,
+    livingReward: 0.0,
     control: {
       iterations: 25,
       delay: 200
@@ -35,6 +36,9 @@ export default new Vuex.Store({
     initialValue(state, value) {
       state.initialValue = value;
     },
+    livingReward(state, value) {
+      state.livingReward = value;
+    },
     noise(state, value) {
       state.noise = value;
     },
@@ -51,6 +55,7 @@ export default new Vuex.Store({
     cellSize: state => state.cellSize,
     gamma: state => state.gamma,
     initialValue: state => state.initialValue,
+    livingReward: state => state.livingReward,
     noise: state => state.noise,
     iterations: state => state.control.iterations,
     delay: state => state.control.delay

@@ -2,8 +2,8 @@ import { delay } from "@/utils";
 import { IterativeAlgorithm } from "./algorithm";
 
 class PolicyIteration extends IterativeAlgorithm {
-  constructor(grid, gamma, initial_value = 0.0) {
-    super(grid, gamma, initial_value);
+  constructor(grid, gamma, initial_value = 0.0, living_reward = 0.0) {
+    super(grid, gamma, initial_value, living_reward);
     this.policy_changes = 0;
   }
 
@@ -43,7 +43,11 @@ class PolicyIteration extends IterativeAlgorithm {
       for (const state of Object.keys(this.grid.states)) {
         const previousValue = this.value(state);
         const action = this.policy(state);
-        const transitions = this.grid.getTransitions(state, action);
+        const transitions = this.grid.getTransitions(
+          state,
+          action,
+          this.living_reward
+        );
         if (!transitions.length) continue;
         const value = this._getStateValue(transitions);
         values.push({ state, value });
@@ -77,7 +81,11 @@ class PolicyIteration extends IterativeAlgorithm {
       let maxAction = null;
 
       for (const action of this.grid.actions) {
-        const transitions = this.grid.getTransitions(state, action);
+        const transitions = this.grid.getTransitions(
+          state,
+          action,
+          this.living_reward
+        );
         const value = this._getStateValue(transitions);
         if (value > maxQValue) {
           maxQValue = value;

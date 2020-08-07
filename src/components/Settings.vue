@@ -1,7 +1,7 @@
 <template>
   <div class="settings">
     <v-row>
-      <v-col :cols="4">
+      <v-col :cols="3">
         <div class="config">
           <p>Display mode</p>
           <v-btn-toggle
@@ -31,46 +31,64 @@
         </div>
       </v-col>
 
-      <v-col :cols="4">
-        <p>Parameters</p>
-        <v-text-field
-          :disabled="$store.getters['algorithm/running']"
-          v-model="gamma"
-          type="number"
-          :min="0"
-          :max="1"
-          :step="0.01"
-          label="Discount Factor (γ)"
-          :style="{ width: '60%' }"
-          outlined
-          dense
-        />
-
-        <v-text-field
-          :disabled="$store.getters['algorithm/running']"
-          v-model="noise"
-          type="number"
-          :min="0"
-          :max="1"
-          :step="0.1"
-          label="Noise"
-          :style="{ width: '60%' }"
-          outlined
-          dense
-        />
-
-        <v-text-field
-          :disabled="$store.getters['algorithm/running']"
-          v-model="initialValue"
-          type="number"
-          :min="0"
-          :max="1"
-          :step="0.01"
-          label="Initial State Values"
-          :style="{ width: '60%' }"
-          outlined
-          dense
-        />
+      <v-col :cols="5">
+        <p>Parameters (Click Reset to apply)</p>
+        <v-row>
+          <v-col :cols="6">
+            <v-text-field
+              :disabled="$store.getters['algorithm/running']"
+              v-model="gamma"
+              type="number"
+              :min="0"
+              :max="1"
+              :step="0.01"
+              label="Discount Factor (γ)"
+              :style="{ width: '1000%' }"
+              outlined
+              dense
+            />
+          </v-col>
+          <v-col :cols="6">
+            <v-text-field
+              :disabled="$store.getters['algorithm/running']"
+              v-model="noise"
+              type="number"
+              :min="0"
+              :max="1"
+              :step="0.1"
+              label="Noise"
+              :style="{ width: '100%' }"
+              outlined
+              dense
+            />
+          </v-col>
+          <v-col :cols="6">
+            <v-text-field
+              :disabled="$store.getters['algorithm/running']"
+              v-model="livingReward"
+              type="number"
+              :step="0.01"
+              label="Living Reward"
+              :style="{ width: '100%' }"
+              outlined
+              dense
+            />
+          </v-col>
+          <v-col :cols="6">
+            <v-text-field
+              :disabled="$store.getters['algorithm/running']"
+              v-model="initialValue"
+              type="number"
+              :min="0"
+              :max="1"
+              :step="0.01"
+              label="Initial State Values"
+              :style="{ width: '100%' }"
+              outlined
+              dense
+            />
+          </v-col>
+        </v-row>
       </v-col>
 
       <v-col :cols="4">
@@ -133,6 +151,14 @@ class Settings extends Vue {
 
   set initialValue(value) {
     this.$store.commit("initialValue", toFloat(value));
+  }
+
+  get livingReward() {
+    return this.$store.getters.livingReward;
+  }
+
+  set livingReward(value) {
+    this.$store.commit("livingReward", toFloat(value));
   }
 }
 

@@ -32,7 +32,7 @@
           fontSize: `${size / 80.0}em`
         }"
       >
-        r = {{ reward }}
+        {{ reward }}
       </text>
       <text
         v-if="mode === 'value'"

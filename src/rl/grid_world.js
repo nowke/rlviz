@@ -17,7 +17,7 @@ class GridWorld {
     }
   }
 
-  nextState(state, action) {
+  nextState(state, action, livingReward) {
     if (this.isTerminal(state)) {
       return [state, this.states[state].reward];
     }
@@ -34,10 +34,17 @@ class GridWorld {
       nextState = currentState;
     }
 
-    return [this._stateRepr(nextState), this.states[state].reward];
+    let reward;
+    if (this.states[state].living) {
+      reward = livingReward;
+    } else {
+      reward = this.states[state].reward;
+    }
+
+    return [this._stateRepr(nextState), reward];
   }
 
-  getTransitions(state, action) {
+  getTransitions(state, action, livingReward) {
     const transitions = [];
     const currentState = this.states[state];
     if (currentState.terminal) {
@@ -45,16 +52,19 @@ class GridWorld {
       return transitions;
     }
 
-    transitions.push([this.prob, ...this.nextState(state, action)]);
+    transitions.push([
+      this.prob,
+      ...this.nextState(state, action, livingReward)
+    ]);
     if (this.prob === 1.0) return transitions;
     const probRem = (1 - this.prob) / 2;
 
     if (action === "U" || action === "D") {
-      transitions.push([probRem, ...this.nextState(state, "L")]);
-      transitions.push([probRem, ...this.nextState(state, "R")]);
+      transitions.push([probRem, ...this.nextState(state, "L", livingReward)]);
+      transitions.push([probRem, ...this.nextState(state, "R", livingReward)]);
     } else if (action === "L" || action === "R") {
-      transitions.push([probRem, ...this.nextState(state, "U")]);
-      transitions.push([probRem, ...this.nextState(state, "D")]);
+      transitions.push([probRem, ...this.nextState(state, "U", livingReward)]);
+      transitions.push([probRem, ...this.nextState(state, "D", livingReward)]);
     }
     return transitions;
   }
@@ -72,6 +82,13 @@ class GridWorld {
       state
     );
     return r;
+  }
+
+  isLiving(state) {
+    if (this.isDisallowed(state)) {
+      return false;
+    }
+    return this.states[state].living;
   }
 
   getReward(state) {

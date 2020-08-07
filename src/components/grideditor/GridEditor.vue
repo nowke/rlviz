@@ -76,6 +76,7 @@
                   :reward="grid.states[`${i},${j}`].reward"
                   :terminal="grid.states[`${i},${j}`].terminal"
                   :disabled="grid.states[`${i},${j}`].disabled"
+                  :living="grid.states[`${i},${j}`].living"
                   :style="{ padding: '2px' }"
                   :selected="grid.states[`${i},${j}`].selected"
                   :onSelectToggle="e => toggleSelectCell(e, i, j)"
@@ -130,35 +131,44 @@
               :x="3"
               :y="3"
               :size="cellSize * 2 - 8"
-              :reward="selectedCellProps.reward"
-              :terminal="selectedCellProps.terminal"
-              :disabled="!selectedCellProps.enabled"
+              :reward="selectedCellReward"
+              :terminal="selectedCellTerminal"
+              :disabled="!selectedCellEnabled"
               :style="{ padding: '2px' }"
               :selected="false"
               :onSelectToggle="() => {}"
+              :living="selectedCellLiving"
             />
           </svg>
           <v-switch
-            :disabled="selectedCellProps.terminal"
-            v-model="selectedCellProps.enabled"
+            :disabled="selectedCellTerminal"
+            v-model="selectedCellEnabled"
             inset
             dense
             hide-details
             label="Allowed"
           />
           <v-switch
-            :disabled="!selectedCellProps.enabled"
-            v-model="selectedCellProps.terminal"
+            :disabled="!selectedCellEnabled"
+            v-model="selectedCellTerminal"
             inset
             dense
             hide-details
             label="Terminal State"
           />
+          <v-switch
+            :disabled="!selectedCellEnabled"
+            v-model="selectedCellLiving"
+            inset
+            dense
+            hide-details
+            label="Living Reward"
+          />
           <v-text-field
-            :disabled="!selectedCellProps.terminal"
-            v-model="selectedCellProps.reward"
+            :disabled="!selectedCellEnabled || selectedCellLiving"
+            v-model="selectedCellReward"
             class="mt-5"
-            label="Terminal Reward"
+            label="Reward"
             type="number"
             outlined
             dense
@@ -218,11 +228,11 @@ class GridEditor extends Vue {
   name = null;
 
   selectedCells = {};
-  selectedCellProps = {
-    terminal: false,
-    enabled: false,
-    reward: 0
-  };
+  selectedCellTerminal = false;
+  selectedCellEnabled = false;
+  selectedCellLiving = true;
+  selectedCellReward = 0;
+
   showConfigError = false;
   saving = false;
 
@@ -248,13 +258,35 @@ class GridEditor extends Vue {
     this.name = this.gridConfig.name;
   }
 
-  @Watch("selectedCellProps", { immediate: true, deep: true })
-  onSelectedCellPropsChange(vals) {
-    // Iterate through selected cells
+  @Watch("selectedCellTerminal")
+  onSelectedCellTerminalChange(val, oldVal) {
+    if (val && !oldVal) {
+      // If user enabled `terminal`, force `living` to 'false'
+      // it is recommended to set explicit reward for terminal states
+      this.selectedCellLiving = false;
+    }
+
+    this.setGridProperties("terminal", val);
+  }
+
+  @Watch("selectedCellEnabled")
+  onSelectedCellEnabledChange(val) {
+    this.setGridProperties("disabled", !val);
+  }
+
+  @Watch("selectedCellLiving")
+  onSelectedCellLivingChange(val) {
+    this.setGridProperties("living", val);
+  }
+
+  @Watch("selectedCellReward")
+  onSelectedCellRewardChange(val) {
+    this.setGridProperties("reward", parseFloat(val) || 0);
+  }
+
+  setGridProperties(key, value) {
     for (const cell of Object.keys(this.selectedCells)) {
-      this.grid.states[cell].terminal = vals.terminal;
-      this.grid.states[cell].disabled = !vals.enabled;
-      this.grid.states[cell].reward = parseFloat(vals.reward);
+      this.grid.states[cell][key] = value;
     }
   }
 
@@ -280,9 +312,10 @@ class GridEditor extends Vue {
       this.grid.states[cell].selected = true;
 
       // (3) Apply the current cell props to selected cell
-      this.selectedCellProps.terminal = this.grid.states[cell].terminal;
-      this.selectedCellProps.enabled = !this.grid.states[cell].disabled;
-      this.selectedCellProps.reward = this.grid.states[cell].reward;
+      this.selectedCellTerminal = this.grid.states[cell].terminal;
+      this.selectedCellEnabled = !this.grid.states[cell].disabled;
+      this.selectedCellReward = this.grid.states[cell].reward;
+      this.selectedCellLiving = this.grid.states[cell].living;
     }
   }
 
@@ -311,19 +344,14 @@ class GridEditor extends Vue {
           selected: false,
           terminal: false,
           disabled: false,
-          reward: 0
+          reward: 0,
+          living: true
         };
       }
     }
 
     this.selectedCells = {};
     this.grid = grid;
-  }
-
-  toState(i, j) {
-    if (this.grid) {
-      return [j + 1, this.grid.height - i];
-    }
   }
 
   selectAll() {
@@ -366,11 +394,10 @@ class GridEditor extends Vue {
     this.height = DEFAULT_GRID_CONFIG.height;
     this.name = DEFAULT_GRID_CONFIG.name;
     this.selectedCells = {};
-    this.selectedCellProps = {
-      terminal: false,
-      enabled: false,
-      reward: 0
-    };
+    this.selectedCellTerminal = false;
+    this.selectedCellEnabled = false;
+    this.selectedCellLiving = false;
+    this.selectedCellReward = 0;
   }
 }
 

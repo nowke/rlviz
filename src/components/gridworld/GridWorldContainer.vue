@@ -66,7 +66,8 @@ class GridWorldContainer extends Vue {
     return new algorithmClass(
       grid,
       this.$store.getters.gamma,
-      this.$store.getters.initialValue
+      this.$store.getters.initialValue,
+      this.$store.getters.livingReward
     );
   }
 

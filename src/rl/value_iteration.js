@@ -1,8 +1,8 @@
 import { IterativeAlgorithm } from "./algorithm";
 
 class ValueIteration extends IterativeAlgorithm {
-  constructor(grid, gamma, initial_value = 0.0) {
-    super(grid, gamma, initial_value);
+  constructor(grid, gamma, initial_value = 0.0, living_reward = 0.0) {
+    super(grid, gamma, initial_value, living_reward);
     this.value_diff = 0;
   }
 
@@ -14,7 +14,11 @@ class ValueIteration extends IterativeAlgorithm {
     let maxValue = Number.NEGATIVE_INFINITY;
     let maxAction = null;
     for (const action of this.grid.actions) {
-      const transitions = this.grid.getTransitions(state, action);
+      const transitions = this.grid.getTransitions(
+        state,
+        action,
+        this.living_reward
+      );
       const value = this._getStateValue(transitions);
       if (value > maxValue) {
         maxAction = action;
@@ -31,7 +35,11 @@ class ValueIteration extends IterativeAlgorithm {
       for (const state of Object.keys(this.grid.states)) {
         const values = [];
         for (const action of this.grid.actions) {
-          const transitions = this.grid.getTransitions(state, action);
+          const transitions = this.grid.getTransitions(
+            state,
+            action,
+            this.living_reward
+          );
           if (!transitions.length) continue;
           values.push(this._getStateValue(transitions));
         }

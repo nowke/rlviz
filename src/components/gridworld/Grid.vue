@@ -15,7 +15,7 @@
             :x="j * cellSize"
             :y="i * cellSize"
             :size="cellSize"
-            :reward="grid.getReward(toState(i, j))"
+            :reward="stateReward(toState(i, j))"
             :value="stateValue(toState(i, j))"
             :terminal="grid.isTerminal(toState(i, j))"
             :disabled="grid.isDisallowed(toState(i, j))"
@@ -101,6 +101,13 @@ class Grid extends Vue {
     if (this.grid) {
       return `${i},${j}`;
     }
+  }
+
+  stateReward(state) {
+    if (this.grid.isLiving(state) && !this.grid.isDisallowed(state)) {
+      return this.algo.living_reward;
+    }
+    return this.grid.getReward(state);
   }
 
   stateValue(state) {

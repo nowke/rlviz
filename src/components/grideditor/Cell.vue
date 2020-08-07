@@ -29,7 +29,7 @@
         />
       </template>
       <text
-        v-if="terminal"
+        v-if="terminal || !living"
         :x="x + size / 2.0"
         :y="y + size / 2.0"
         dominant-baseline="middle"
@@ -58,6 +58,7 @@ class Cell extends Vue {
   @Prop() reward;
   @Prop() terminal;
   @Prop() disabled;
+  @Prop() living;
   @Prop({ default: false, type: Boolean }) selected;
   @Prop() onSelectToggle;
 
