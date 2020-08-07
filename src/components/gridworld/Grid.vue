@@ -17,6 +17,8 @@
             :size="cellSize"
             :reward="stateReward(toState(i, j))"
             :value="stateValue(toState(i, j))"
+            :minValue="minValue(toState(i, j))"
+            :maxValue="maxValue(toState(i, j))"
             :terminal="grid.isTerminal(toState(i, j))"
             :disabled="grid.isDisallowed(toState(i, j))"
             :policy="statePolicy(toState(i, j))"
@@ -113,6 +115,20 @@ class Grid extends Vue {
   stateValue(state) {
     if (!this.grid.isDisallowed(state)) {
       return this.algo.value(state);
+    }
+    return 0.0;
+  }
+
+  minValue(state) {
+    if (!this.grid.isDisallowed(state)) {
+      return this.algo.minValue(state);
+    }
+    return 0.0;
+  }
+
+  maxValue(state) {
+    if (!this.grid.isDisallowed(state)) {
+      return this.algo.maxValue(state);
     }
     return 0.0;
   }

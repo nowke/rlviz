@@ -69,7 +69,6 @@
 </template>
 
 <script>
-import chroma from "chroma-js";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 import Arrow from "./Arrow.vue";
@@ -85,8 +84,9 @@ class Cell extends Vue {
   @Prop() y;
   @Prop() size;
   @Prop() reward;
-  @Prop() values;
   @Prop() value;
+  @Prop() minValue;
+  @Prop() maxValue;
   @Prop() terminal;
   @Prop() disabled;
   @Prop() mode;
@@ -94,19 +94,15 @@ class Cell extends Vue {
   _policyConfig;
 
   get cellColor() {
-    if (!this.value) return "#000";
-
-    if (this.value >= 0) {
-      return chroma
-        .scale(["black", "#10ac84"])
-        .domain([0, 1.0])(this.value)
-        .hex();
-    } else {
-      return chroma
-        .scale(["black", "#ee5253"])
-        .domain([0, 1.0])(-this.value)
-        .hex();
+    let [red, green] = [0.0, 0.0];
+    if (this.value < 0 && this.minValue < 0) {
+      red = Math.floor((this.value * 165.75) / this.minValue);
     }
+    if (this.value > 0 && this.maxValue > 0) {
+      green = Math.floor((this.value * 165.75) / this.maxValue);
+    }
+
+    return `rgb(${red}, ${green}, 0)`;
   }
 
   get policyConfig() {

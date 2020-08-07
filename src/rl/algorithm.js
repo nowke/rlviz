@@ -22,6 +22,14 @@ export class IterativeAlgorithm {
     return this.states[state].value;
   }
 
+  minValue() {
+    return Math.min(...this._values());
+  }
+
+  maxValue() {
+    return Math.max(...this._values());
+  }
+
   reset() {
     this._initializeState();
   }
@@ -42,5 +50,12 @@ export class IterativeAlgorithm {
           prob * (reward + this.gamma * this.value(nextState))
       )
       .reduce((x, y) => x + y, 0.0);
+  }
+
+  _values() {
+    const values = Object.keys(this.states).map(
+      state => this.states[state].value
+    );
+    return [...values, 0.0];
   }
 }
